@@ -1,0 +1,65 @@
+{
+  "name": "twitter-clone-for-softcom-test",
+  "version": "1.0.0",
+  "description": "A Twitter clone for a tech interview",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node api/src/index.js",
+    "release": "npm run clean && npm run build-app && npm run start",
+    "clean": "rm -rf api/dist && mkdir api/dist",
+    "build": "npm run clean && npm run build-app",
+    "build-app": "babel api/src -s -d api/dist --presets=@babel/env",
+    "start": "node api/dist/index.js",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "codeClimate": "nyc --reporter=lcov npm test",
+    "test": "mocha --require @babel/register tests/index.js --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okezieobi/twitter-clone-for-softcom-test.git"
+  },
+  "author": "Frank Okezie Obiedere",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/okezieobi/twitter-clone-for-softcom-test/issues"
+  },
+  "homepage": "https://github.com/okezieobi/twitter-clone-for-softcom-test#readme",
+  "devDependencies": {
+    "@babel/cli": "",
+    "@babel/core": "",
+    "@babel/node": "",
+    "@babel/preset-env": "",
+    "@babel/register": "",
+    "coveralls": "",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "mocha": "",
+    "mocha-lcov-reporter": "",
+    "nodemon": "",
+    "nyc": ""
+  },
+  "dependencies": {
+    "bcryptjs": "",
+    "bluebird": "",
+    "body-parser": "",
+    "chai": "",
+    "chai-http": "",
+    "core-js": "",
+    "cors": "",
+    "dotenv": "",
+    "express": "",
+    "jsonwebtoken": "",
+    "loglevel": "",
+    "moment": "",
+    "pg": "",
+    "pg-promise": "",
+    "regenerator-runtime": "",
+    "swagger-jsdoc": "",
+    "swagger-ui-express": "",
+    "underscore": "",
+    "unique-random": "",
+    "validator": ""
+  },
+  "heroku-run-build-script": true
+}
