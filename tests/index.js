@@ -51,6 +51,7 @@ class Test {
 }
 
 require('./users/signup');
+require('./users/signin');
 
 export {
   expect,

@@ -19,6 +19,7 @@ class UserController {
   constructor() {
     this.addUser = this.addUser.bind(this);
     this.sendAuthResponse = this.sendAuthResponse.bind(this);
+    this.getFollows = this.getFollows.bind(this);
   }
 
   async addUser({ body }, res, next) {
@@ -46,7 +47,8 @@ class UserController {
   }
 
   sendAuthResponse(req, res) {
-    const { newUser, verifyUser } = this;
+    const { newUser } = this;
+    const { verifyUser } = authenticateUsers;
     try {
       if (verifyUser) {
         const signInRes = responseData(verifyUser);

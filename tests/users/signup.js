@@ -38,11 +38,11 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
     expect(response.body.data).to.have.property('fullName').to.be.a('string').to.equal(testData.fullName);
     expect(response.body.data).to.have.property('userName').to.be.a('string').to.equal(testData.username);
     expect(response.body.data).to.have.property('email').to.be.a('string').to.equal(testData.email);
-    expect(response.body.data).to.have.property('following').to.be.a('number').to.equal(0);
-    expect(response.body.data).to.have.property('followers').to.be.a('number').to.equal(0);
     expect(response.body.data).to.have.property('type').to.be.a('string').to.equal('Client');
     expect(response.body).to.have.property('token').to.be.a('string');
     expect(response.header).to.have.property('token').to.be.a('string');
+    expect(response.body.data).to.have.property('followings').to.be.a('number').to.equal(0);
+    expect(response.body.data).to.have.property('followers').to.be.a('number').to.equal(0);
   });
 
   it('Should NOT create a User at "/api/v1/auth/signup" if username is undefined or an empty string or null', async () => {

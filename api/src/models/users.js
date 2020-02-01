@@ -13,7 +13,7 @@ export default class UserModel {
   }
 
   static responseData({
-    id, full_name, username, email, type, followers = 0, following = 0,
+    id, full_name, username, email, type, followers = 0, followings = 0,
   }) {
     return {
       id: parseInt(id, 10),
@@ -22,7 +22,7 @@ export default class UserModel {
       email: String(email),
       type: String(type),
       followers,
-      following,
+      followings,
     };
   }
 }

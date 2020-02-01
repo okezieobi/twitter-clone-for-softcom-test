@@ -5,7 +5,7 @@ import userController from '../controllers/users';
 
 const { validatePassword, verifySignup, verifySignin } = new UserValidator();
 const { authSignup, authSignin, verifyPassword } = userAuth;
-const { addUser } = userController;
+const { addUser, getFollows } = userController;
 const { routeCallbacks } = MiddlewareHelper;
 
 export default class UserMiddleware {
@@ -16,6 +16,6 @@ export default class UserMiddleware {
 
   static signin() {
     return routeCallbacks(verifySignin, validatePassword,
-      authSignin, verifyPassword);
+      authSignin, verifyPassword, getFollows);
   }
 }
