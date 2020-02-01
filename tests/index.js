@@ -10,6 +10,11 @@ import seeder from '../api/src/seeders/seeder';
 import token from '../api/src/helpers/jwt';
 
 class Test {
+  constructor() {
+    this.returnRandomValue = this.returnRandomValue.bind(this);
+    this.createEmailVarChar = this.createEmailVarChar.bind(this);
+  }
+
   static deleteData() {
     return seeder.deleteAll;
   }
@@ -26,8 +31,8 @@ class Test {
     return Math.floor(Math.random() * array.length);
   }
 
-  static returnRandomValue(...values) {
-    return values[this.getRandomArrayIndex(values)];
+  returnRandomValue(...values) {
+    return values[this.constructor.getRandomArrayIndex(values)];
   }
 
   static createVarChars(length) {
@@ -40,8 +45,8 @@ class Test {
     return result;
   }
 
-  static createEmailVarChar(userLength, domainLength) {
-    return `${this.createVarChars(userLength)}@${this.createVarChars(domainLength)}.${this.createVarChars(3)}`;
+  createEmailVarChar(userLength, domainLength) {
+    return `${this.constructor.createVarChars(userLength)}@${this.constructor.createVarChars(domainLength)}.${this.constructor.createVarChars(3)}`;
   }
 }
 

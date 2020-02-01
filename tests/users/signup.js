@@ -10,12 +10,16 @@ import {
 chai.use(chaiHttp);
 
 describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', () => {
+  const { queryNone } = pool;
+  const { deleteData, createVarChars } = Test;
+  const { returnRandomValue, createEmailVarChar } = new Test();
+
   before(async () => {
-    await pool.queryNone(Test.deleteData());
+    await queryNone(deleteData());
   });
 
   after(async () => {
-    await pool.queryNone(Test.deleteData());
+    await queryNone(deleteData());
   });
 
   it('Should create a User at "/api/v1/auth/signup" with POST if all request inputs are valid', async () => {
@@ -34,6 +38,8 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
     expect(response.body.data).to.have.property('fullName').to.be.a('string').to.equal(testData.fullName);
     expect(response.body.data).to.have.property('userName').to.be.a('string').to.equal(testData.username);
     expect(response.body.data).to.have.property('email').to.be.a('string').to.equal(testData.email);
+    expect(response.body.data).to.have.property('following').to.be.a('number').to.equal(0);
+    expect(response.body.data).to.have.property('followers').to.be.a('number').to.equal(0);
     expect(response.body.data).to.have.property('type').to.be.a('string').to.equal('Client');
     expect(response.body).to.have.property('token').to.be.a('string');
     expect(response.header).to.have.property('token').to.be.a('string');
@@ -46,7 +52,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.username = Test.returnRandomValue(undefined, '', null);
+    testData.username = returnRandomValue(undefined, '', null);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -76,7 +82,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.username = Test.createVarChars(200);
+    testData.username = createVarChars(200);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -91,7 +97,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.fullName = Test.returnRandomValue(undefined, '', null);
+    testData.fullName = returnRandomValue(undefined, '', null);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -121,7 +127,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.fullName = Test.createVarChars(200);
+    testData.fullName = createVarChars(200);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -136,7 +142,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.email = Test.returnRandomValue(undefined, '', null);
+    testData.email = returnRandomValue(undefined, '', null);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -181,7 +187,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.email = Test.createEmailVarChar(200, 8);
+    testData.email = createEmailVarChar(200, 8);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -211,7 +217,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.password = Test.returnRandomValue(undefined, '', null);
+    testData.password = returnRandomValue(undefined, '', null);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -241,7 +247,7 @@ describe('Test endpoints at "/api/v1/auth/signup" to create a User with POST', (
       password: '1234AOdBcd!',
       username: 'Obiedere',
     };
-    testData.password = Test.createVarChars(200);
+    testData.password = createVarChars(200);
     const response = await chai.request(app).post('/api/v1/auth/signup').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
