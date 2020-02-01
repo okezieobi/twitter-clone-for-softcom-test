@@ -13,9 +13,7 @@ export default class Users {
     return 'SELECT * FROM users WHERE email = $1 OR username = $2';
   }
 
-  /*
   static authSignin() {
     return 'SELECT * FROM users WHERE email = $1 OR username = $1';
   }
-  */
 }

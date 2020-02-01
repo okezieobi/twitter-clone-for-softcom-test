@@ -3,10 +3,10 @@ import router from './router';
 import UserMiddleware from '../middlewares/users';
 
 const { sendAuthResponse } = userController;
-const { signup } = UserMiddleware;
+const { signup, signin } = UserMiddleware;
 
 router.post('/auth/signup', signup(), sendAuthResponse);
 
-// router.post('/auth/signin', userMiddleware.signin(), userController.sendAuthResponse);
+router.post('/auth/signin', signin(), sendAuthResponse);
 
 export default router;
