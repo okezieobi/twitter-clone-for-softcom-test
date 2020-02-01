@@ -11,6 +11,7 @@ export default class UserValidator {
   constructor() {
     this.validatePassword = this.validatePassword.bind(this);
     this.verifySignup = this.verifySignup.bind(this);
+    this.verifySignin = this.verifySignin.bind(this);
   }
 
   verifySignup({ body }, res, next) {
@@ -44,12 +45,10 @@ export default class UserValidator {
     else next();
   }
 
-  /*
   verifySignin({ body }, res, next) {
     const { user } = body;
-    const userErr = this.validateRequest(user, 'Email or username', 'validateVarChar');
-    if (userErr) Protocol.err400Res(res, userErr);
+    const userErr = this.constructor.validateRequest(user, 'Email or username', validateVarChar);
+    if (userErr) err400Res(res, userErr);
     else next();
   }
-  */
 }
