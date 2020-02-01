@@ -1,41 +1,46 @@
-import protocol from '../helpers/response';
-import testRequest from '../helpers/testReq';
+import HttpResponse from '../helpers/response';
+import TestRequest from '../helpers/testReq';
 
-class UserValidator {
+const { getFalseValue, findError } = TestRequest;
+const {
+  validateEmail, validateVarChar, validatePassword,
+} = new TestRequest();
+const { err400Res } = new HttpResponse();
+
+export default class UserValidator {
   constructor() {
-    this.verifySignup = this.verifySignup.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
-    // this.verifySignin = this.verifySignin.bind(this);
-    this.validateRequest = this.validateRequest.bind(this);
+    this.verifySignup = this.verifySignup.bind(this);
   }
 
   verifySignup({ body }, res, next) {
     const {
       fullName, email, username,
     } = body;
-    const fullNameFalseErr = testRequest.getFalseValue(fullName, 'Full name');
-    const emailFalseErr = testRequest.getFalseValue(email, 'Email');
-    const usernameFalseErr = testRequest.getFalseValue(username, 'Username');
-    this.findFalseErr = testRequest.findError(fullNameFalseErr, emailFalseErr, usernameFalseErr);
-    if (this.findFalseErr) return protocol.err400Res(res, this.findFalseErr);
-    const fullNameErrTest = testRequest.validateVarChar(fullName, 'Full name');
-    const emailErrTest = testRequest.validateEmail(email);
-    const usernameErrTest = testRequest.validateVarChar(username, 'Username');
-    const findErrTest = testRequest.findError(fullNameErrTest, emailErrTest, usernameErrTest);
-    if (findErrTest) return protocol.err400Res(res, findErrTest);
-    return next();
+    const fullNameFalseErr = getFalseValue(fullName, 'Full name');
+    const emailFalseErr = getFalseValue(email, 'Email');
+    const usernameFalseErr = getFalseValue(username, 'Username');
+    const findFalseErr = findError(fullNameFalseErr, emailFalseErr, usernameFalseErr);
+    if (findFalseErr) return err400Res(res, findFalseErr);
+    const fullNameErrTest = validateVarChar(fullName, 'Full name');
+    const emailErrTest = validateEmail(email);
+    const usernameErrTest = validateVarChar(username, 'Username');
+    const findErrTest = findError(fullNameErrTest, emailErrTest, usernameErrTest);
+    if (findErrTest) return err400Res(res, findErrTest);
+    this.signupNext = next();
+    return this.signupNext;
   }
 
-  validateRequest(prop, propTitle, patternTest) {
-    this.falseError = testRequest.getFalseValue(prop, propTitle);
-    if (this.falseError) return this.falseError;
-    return testRequest[patternTest](prop, propTitle);
+  static validateRequest(prop, propTitle, patternTest) {
+    const falseError = getFalseValue(prop, propTitle);
+    if (falseError) return falseError;
+    return patternTest(prop, propTitle);
   }
 
   validatePassword({ body }, res, next) {
     const { password } = body;
-    const passwordErr = this.validateRequest(password, 'Password', 'validatePassword');
-    if (passwordErr) protocol.err400Res(res, passwordErr);
+    const passwordErr = this.constructor.validateRequest(password, 'Password', validatePassword);
+    if (passwordErr) err400Res(res, passwordErr);
     else next();
   }
 
@@ -43,10 +48,8 @@ class UserValidator {
   verifySignin({ body }, res, next) {
     const { user } = body;
     const userErr = this.validateRequest(user, 'Email or username', 'validateVarChar');
-    if (userErr) protocol.err400Res(res, userErr);
+    if (userErr) Protocol.err400Res(res, userErr);
     else next();
   }
   */
 }
-
-export default new UserValidator();

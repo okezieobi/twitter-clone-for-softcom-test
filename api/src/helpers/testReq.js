@@ -1,46 +1,53 @@
-import regex from './validator';
+import validator from './validator';
 import templateErrors from '../errors/templateLiterals';
 import literalErrors from '../errors/stringLiterals';
 
-class Requests {
-  findError(...errorList) {
-    this.filteredError = errorList.find((error) => error);
-    return this.filteredError;
+export default class Requests {
+  constructor() {
+    this.validateEmail = this.validateEmail.bind(this);
+    this.validatePassword = this.validatePassword.bind(this);
+    this.validateVarChar = this.validateVarChar.bind(this);
+    this.validateInteger = this.validateInteger.bind(this);
+    this.validateNumber = this.validateNumber.bind(this);
   }
 
-  getFalseValue(request, requestTitle) {
-    if (!request) this.falseError = templateErrors.isRequired(requestTitle);
-    return this.falseError;
+  static findError(...errorList) {
+    return errorList.find((error) => error);
   }
 
-  validateWithTests(request, test, testError, requestTitle = undefined) {
-    if (!regex[test](request) && !requestTitle) {
-      this.testError = literalErrors[testError]();
-    } else if (!regex[test](request) && requestTitle) {
-      this.testError = templateErrors[testError](requestTitle);
+  static getFalseValue(request, requestTitle) {
+    let err;
+    if (!request) err = templateErrors.isRequired(requestTitle);
+    return err;
+  }
+
+  static validateWithTests(request, test, testError, requestTitle = undefined) {
+    let err;
+    if (!validator[test](request) && !requestTitle) {
+      err = literalErrors[testError]();
+    } else if (!validator[test](request) && requestTitle) {
+      err = templateErrors[testError](requestTitle);
     }
-    return this.testError;
+    return err;
   }
 
   validateEmail(email) {
-    return this.validateWithTests(email, 'validateEmail', 'notEmail');
+    return this.constructor.validateWithTests(email, 'validateEmail', 'notEmail');
   }
 
   validatePassword(password) {
-    return this.validateWithTests(password, 'validatePassword', 'notPassword');
+    return this.constructor.validateWithTests(password, 'validatePassword', 'notPassword');
   }
 
   validateVarChar(chars, charTitle) {
-    return this.validateWithTests(chars, 'checkVarChar', 'notVarChar', charTitle);
+    return this.constructor.validateWithTests(chars, 'checkVarChar', 'notVarChar', charTitle);
   }
 
   validateNumber(number, numberTitle) {
-    return this.validateWithTests(number, 'checkNumber', 'notNumber', numberTitle);
+    return this.constructor.validateWithTests(number, 'checkNumber', 'notNumber', numberTitle);
   }
 
   validateInteger(integer, integerTitle) {
-    return this.validateWithTests(integer, 'checkInteger', 'notInteger', integerTitle);
+    return this.constructor.validateWithTests(integer, 'checkInteger', 'notInteger', integerTitle);
   }
 }
-
-export default new Requests();

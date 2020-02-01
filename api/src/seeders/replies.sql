@@ -1,3 +1,7 @@
+/*
+Connect to db as interviewprojects and RUN  \c softcomtwitterclone \i api/src/seeders/replies.sql \q
+*/
+
 INSERT INTO replytweets
     (id, reply, "user_id", "tweet_id")
 VALUES

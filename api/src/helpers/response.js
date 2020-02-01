@@ -1,19 +1,32 @@
-class Protocol {
-  responseData(codeStatus, resKey, resValue) {
-    this.resData = {
+export default class HttpResponse {
+  constructor() {
+    this.response = this.response.bind(this);
+    this.authResponse = this.authResponse.bind(this);
+    this.err400Res = this.err400Res.bind(this);
+    this.err404Res = this.err404Res.bind(this);
+    this.err403Res = this.err403Res.bind(this);
+    this.success200Res = this.success200Res.bind(this);
+    this.success200ResMessage = this.success200ResMessage.bind(this);
+    this.success201Res = this.success201Res.bind(this);
+    this.auth201Res = this.auth201Res.bind(this);
+    this.auth200Res = this.auth200Res.bind(this);
+  }
+
+  static responseData(codeStatus, resKey, resValue) {
+    const resData = {
       status: codeStatus,
       [resKey]: resValue,
     };
-    return this.resData;
+    return resData;
   }
 
   response(res, codeStatus, resKey, resValue) {
-    const response = this.responseData(codeStatus, resKey, resValue);
+    const response = this.constructor.responseData(codeStatus, resKey, resValue);
     res.status(codeStatus).send(response);
   }
 
   authResponse(res, codeStatus, resKey, resValue, token) {
-    const authResponse = this.responseData(codeStatus, resKey, resValue);
+    const authResponse = this.constructor.responseData(codeStatus, resKey, resValue);
     authResponse.token = token;
     res.status(codeStatus).set('token', authResponse.token).send(authResponse);
   }
@@ -50,5 +63,3 @@ class Protocol {
     return this.authResponse(res, 200, 'data', auth201Data, token);
   }
 }
-
-export default new Protocol();

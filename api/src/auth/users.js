@@ -1,12 +1,17 @@
-import protocol from '../helpers/response';
+import HttpResponse from '../helpers/response';
 import database from '../db/pgConnect';
 import literalErrors from '../errors/stringLiterals';
-import logger from '../helpers/logger';
+import Logger from '../helpers/logger';
 // import templateErrors from '../errors/templateLiterals';
 // import test from '../helpers/regex';
 import Queries from '../queries/users';
 //  import jwt from '../helpers/jwt';
 // import bcrypt from '../helpers/bcrypt';
+
+const { err400Res } = new HttpResponse();
+const { authSignup } = Queries;
+const { queryOneOrNone } = database;
+const { displayErrors } = Logger;
 
 class UserAuth {
   constructor() {
@@ -18,12 +23,12 @@ class UserAuth {
   async authSignup({ body }, res, next) {
     try {
       const { username, email } = body;
-      const findUserQuery = Queries.authSignup();
-      this.newUser = await database.queryOneOrNone(findUserQuery, [email, username]);
-      if (this.newUser) return protocol.err400Res(res, literalErrors.userExists());
-      return next();
+      const newUser = await queryOneOrNone(authSignup(), [email, username]);
+      if (newUser) return err400Res(res, literalErrors.userExists());
+      this.signupNext = next();
+      return this.signupNext;
     } catch (error) {
-      return logger.displayErrors(error);
+      return displayErrors(error);
     }
   }
 
@@ -54,5 +59,4 @@ class UserAuth {
   */
 }
 
-const authUser = new UserAuth();
-export default authUser;
+export default new UserAuth();

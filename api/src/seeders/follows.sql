@@ -1,3 +1,7 @@
+/*
+Connect to db as interviewprojects and RUN  \c softcomtwitterclone \i api/src/seeders/follows.sql \q
+*/
+
 INSERT INTO "following"
     ("user_id", "following_id")
 VALUES

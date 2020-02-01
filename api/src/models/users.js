@@ -1,17 +1,19 @@
 /* eslint-disable camelcase */
-import numbers from '../helpers/uniqueNos';
-import bcrypt from '../helpers/bcrypt';
+import Numbers from '../helpers/uniqueNos';
+import Bcrypt from '../helpers/bcrypt';
+
+const { uniqueIds } = Numbers;
+const { hash } = Bcrypt;
 
 export default class UserModel {
   static requestData({
     fullName = '', email = '', password = '', username = '',
   }) {
-    return [numbers.uniqueIds(), fullName, email,
-      bcrypt.hash(password), username];
+    return [uniqueIds(), fullName, email, hash(password), username];
   }
 
   static responseData({
-    id, full_name, username, email, type,
+    id, full_name, username, email, type, followers = 0, following = 0,
   }) {
     return {
       id: parseInt(id, 10),
@@ -19,6 +21,8 @@ export default class UserModel {
       userName: String(username),
       email: String(email),
       type: String(type),
+      followers,
+      following,
     };
   }
 }
