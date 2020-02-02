@@ -3,23 +3,31 @@ import database from '../db/pgConnect';
 import literalErrors from '../errors/stringLiterals';
 import Logger from '../helpers/logger';
 // import templateErrors from '../errors/templateLiterals';
-// import test from '../helpers/regex';
+import Validator from '../helpers/validator';
 import Queries from '../queries/users';
-//  import jwt from '../helpers/jwt';
+import Jwt from '../helpers/jwt';
 import Bcrypt from '../helpers/bcrypt';
+import TestRequest from '../helpers/testReq';
 
 const { err400Res, err404Res } = new HttpResponse();
-const { authSignup, authSignin } = Queries;
+const { authSignup, authSignin, findUserById } = Queries;
 const { queryOneOrNone } = database;
 const { displayErrors } = Logger;
 const { compare } = Bcrypt;
-const { userExists, userNotExists, wrongPassword } = literalErrors;
+const {
+  userExists, userNotExists, wrongPassword, invalidToken, tokenIsRequired, wrongToken,
+} = literalErrors;
+const { verify } = Jwt;
+const { validateJWT } = new TestRequest();
+const { checkInteger } = Validator;
 
 class UserAuth {
   constructor() {
     this.authSignup = this.authSignup.bind(this);
     this.verifyPassword = this.verifyPassword.bind(this);
     this.authSignin = this.authSignin.bind(this);
+    this.authToken = this.authToken.bind(this);
+    this.authenticateAll = this.authenticateAll.bind(this);
   }
 
   async authSignup({ body }, res, next) {
@@ -51,6 +59,30 @@ class UserAuth {
     try {
       const verifyPassword = await compare(verifyUser.password, password);
       if (!verifyPassword) return err400Res(res, wrongPassword());
+      return next();
+    } catch (error) {
+      return displayErrors(error);
+    }
+  }
+
+  async authToken({ headers }, res, next) {
+    const { token } = headers;
+    if (!token) return err400Res(res, tokenIsRequired());
+    const tokenErr = validateJWT(token);
+    if (tokenErr) return err400Res(res, tokenErr);
+    const { userId, message, name } = await verify(token);
+    if (name || message) return err400Res(res, { name, message }); // jwt error
+    const checkId = checkInteger(userId);
+    if (!checkId) return err400Res(res, invalidToken());
+    this.userId = userId;
+    return next();
+  }
+
+  async authenticateAll(req, res, next) {
+    const { userId } = this;
+    try {
+      this.findUser = await queryOneOrNone(findUserById(), [userId]);
+      if (!this.findUser) return err404Res(res, wrongToken());
       return next();
     } catch (error) {
       return displayErrors(error);

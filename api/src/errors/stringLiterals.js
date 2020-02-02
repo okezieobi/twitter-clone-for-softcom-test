@@ -19,6 +19,10 @@ export default class Errors {
     return 'Token is required, please sign in or sign up';
   }
 
+  static notJWT() {
+    return 'Token provided is does not match JWT format';
+  }
+
   static wrongToken() {
     return 'Token provided does not match any user';
   }

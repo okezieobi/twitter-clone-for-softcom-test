@@ -39,7 +39,7 @@ describe('Test endpoints at "/api/v1/auth/signin" to sign in a User with POST', 
     expect(response.body).to.have.property('data').to.be.an('object');
     expect(response.body.data).to.have.property('id').to.be.a('number');
     expect(response.body.data).to.have.property('fullName').to.be.a('string');
-    expect(response.body.data).to.have.property('userName').to.be.a('string').to.equal(data.username);
+    expect(response.body.data).to.have.property('username').to.be.a('string').to.equal(data.username);
     expect(response.body.data).to.have.property('email').to.be.a('string').to.equal(data.email);
     expect(response.body.data).to.have.property('type').to.be.a('string').to.equal('Client');
     expect(response.body).to.have.property('token').to.be.a('string');

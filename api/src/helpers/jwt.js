@@ -1,10 +1,13 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+const { sign, verify } = jwt;
+
 dotenv.config();
+
 export default class Token {
   static generate(id = 0) {
-    return jwt.sign({
+    return sign({
       userId: id,
     }, process.env.SECRET, {
       expiresIn: 24 * 60 * 60,
@@ -12,10 +15,6 @@ export default class Token {
   }
 
   static verify(token = '') {
-    try {
-      return jwt.verify(token, process.env.SECRET, (err, decoded) => decoded || err);
-    } catch (error) {
-      throw new Error(error);
-    }
+    return verify(token, process.env.SECRET, (err, decoded) => decoded || err);
   }
 }

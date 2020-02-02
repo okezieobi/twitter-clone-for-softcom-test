@@ -3,7 +3,7 @@ import userAuth from '../auth/users';
 import MiddlewareHelper from './middleware';
 import userController from '../controllers/users';
 
-const { validatePassword, verifySignup, verifySignin } = new UserValidator();
+const { validatePassword, verifySignup, verifySignin } = UserValidator;
 const { authSignup, authSignin, verifyPassword } = userAuth;
 const { addUser, getFollows } = userController;
 const { routeCallbacks } = MiddlewareHelper;

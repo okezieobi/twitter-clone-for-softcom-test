@@ -18,7 +18,7 @@ export default class UserModel {
     return {
       id: parseInt(id, 10),
       fullName: String(full_name),
-      userName: String(username),
+      username: String(username),
       email: String(email),
       type: String(type),
       followers,

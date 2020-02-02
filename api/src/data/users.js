@@ -1,20 +1,16 @@
 import HttpResponse from '../helpers/response';
 import TestRequest from '../helpers/testReq';
+import IndexValidator from './index';
 
 const { getFalseValue, findError } = TestRequest;
 const {
   validateEmail, validateVarChar, validatePassword,
 } = new TestRequest();
 const { err400Res } = new HttpResponse();
+const { validateRequest } = IndexValidator;
 
 export default class UserValidator {
-  constructor() {
-    this.validatePassword = this.validatePassword.bind(this);
-    this.verifySignup = this.verifySignup.bind(this);
-    this.verifySignin = this.verifySignin.bind(this);
-  }
-
-  verifySignup({ body }, res, next) {
+  static verifySignup({ body }, res, next) {
     const {
       fullName, email, username,
     } = body;
@@ -28,26 +24,19 @@ export default class UserValidator {
     const usernameErrTest = validateVarChar(username, 'Username');
     const findErrTest = findError(fullNameErrTest, emailErrTest, usernameErrTest);
     if (findErrTest) return err400Res(res, findErrTest);
-    this.signupNext = next();
-    return this.signupNext;
+    return next();
   }
 
-  static validateRequest(prop, propTitle, patternTest) {
-    const falseError = getFalseValue(prop, propTitle);
-    if (falseError) return falseError;
-    return patternTest(prop, propTitle);
-  }
-
-  validatePassword({ body }, res, next) {
+  static validatePassword({ body }, res, next) {
     const { password } = body;
-    const passwordErr = this.constructor.validateRequest(password, 'Password', validatePassword);
+    const passwordErr = validateRequest(password, 'Password', validatePassword);
     if (passwordErr) err400Res(res, passwordErr);
     else next();
   }
 
-  verifySignin({ body }, res, next) {
+  static verifySignin({ body }, res, next) {
     const { user } = body;
-    const userErr = this.constructor.validateRequest(user, 'Email or username', validateVarChar);
+    const userErr = validateRequest(user, 'Email or username', validateVarChar);
     if (userErr) err400Res(res, userErr);
     else next();
   }
