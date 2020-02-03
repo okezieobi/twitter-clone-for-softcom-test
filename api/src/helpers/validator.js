@@ -22,11 +22,11 @@ export default class Patterns {
   }
 
   static checkNumber(number = '') {
-    return isNumeric(number);
+    return isNumeric(number) && parseInt(number, 10) >= 0;
   }
 
   static checkInteger(integer = '') {
-    return isInt(integer);
+    return isInt(integer) && parseInt(integer, 10) >= 0;
   }
 
   static checkJWT(jwt = '') {

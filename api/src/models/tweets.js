@@ -12,7 +12,7 @@ export default class TweetModels {
     return {
       id: parseInt(id, 10),
       tweet: String(tweet),
-      createdOne: Date(created_on),
+      createdOn: Date(created_on),
     };
   }
 }

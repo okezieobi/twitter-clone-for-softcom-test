@@ -2,7 +2,7 @@ import Validator from './validator';
 import TemplateErrors from '../errors/templateLiterals';
 import LiteralErrors from '../errors/stringLiterals';
 
-const { isRequired } = TemplateErrors;
+const { isRequired, isNumberType, isStringType } = TemplateErrors;
 
 export default class Requests {
   constructor() {
@@ -25,7 +25,19 @@ export default class Requests {
     return err;
   }
 
-  static validateWithTests(request, test, testError, requestTitle = undefined) {
+  static validateRequestStringType(request, requestTitle) {
+    let err;
+    if (typeof request !== 'string') err = isStringType(requestTitle);
+    return err;
+  }
+
+  static validateRequestNumberType(request, requestTitle) {
+    let err;
+    if (typeof request !== 'number') err = isNumberType(requestTitle);
+    return err;
+  }
+
+  static validateWithTests(request, test, testError, requestTitle) {
     let err;
     if (!Validator[test](request) && !requestTitle) {
       err = LiteralErrors[testError]();

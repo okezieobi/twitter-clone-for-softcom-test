@@ -17,8 +17,7 @@ class TweetController {
     this.sendResponse = this.sendResponse.bind(this);
   }
 
-  async addOne({ body }, res, next) {
-    const { tweet } = body;
+  async addOne({ body: { tweet = '' } }, res, next) {
     const { findUser } = authenticateUsers;
     const { id } = findUser;
     const arrayData = requestData(tweet, id);

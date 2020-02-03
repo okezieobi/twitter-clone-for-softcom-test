@@ -2,41 +2,31 @@ import HttpResponse from '../helpers/response';
 import TestRequest from '../helpers/testReq';
 import IndexValidator from './index';
 
-const { getFalseValue, findError } = TestRequest;
+const { findError } = TestRequest;
 const {
   validateEmail, validateVarChar, validatePassword,
 } = new TestRequest();
 const { err400Res } = new HttpResponse();
-const { validateRequest } = IndexValidator;
+const { checkStringTypeRequest } = new IndexValidator();
 
 export default class UserValidator {
-  static verifySignup({ body }, res, next) {
-    const {
-      fullName, email, username,
-    } = body;
-    const fullNameFalseErr = getFalseValue(fullName, 'Full name');
-    const emailFalseErr = getFalseValue(email, 'Email');
-    const usernameFalseErr = getFalseValue(username, 'Username');
-    const findFalseErr = findError(fullNameFalseErr, emailFalseErr, usernameFalseErr);
-    if (findFalseErr) return err400Res(res, findFalseErr);
-    const fullNameErrTest = validateVarChar(fullName, 'Full name');
-    const emailErrTest = validateEmail(email);
-    const usernameErrTest = validateVarChar(username, 'Username');
-    const findErrTest = findError(fullNameErrTest, emailErrTest, usernameErrTest);
-    if (findErrTest) return err400Res(res, findErrTest);
+  static verifySignup({ body: { fullName = '', email = '', username = '' } }, res, next) {
+    const fullNameErr = checkStringTypeRequest(fullName, 'Full name', validateVarChar);
+    const emailErr = checkStringTypeRequest(email, 'Email', validateEmail);
+    const usernameErr = checkStringTypeRequest(username, 'Username', validateVarChar);
+    const findErr = findError(fullNameErr, emailErr, usernameErr);
+    if (findErr) return err400Res(res, findErr);
     return next();
   }
 
-  static validatePassword({ body }, res, next) {
-    const { password } = body;
-    const passwordErr = validateRequest(password, 'Password', validatePassword);
+  static validatePassword({ body: { password = '' } }, res, next) {
+    const passwordErr = checkStringTypeRequest(password, 'Password', validatePassword);
     if (passwordErr) err400Res(res, passwordErr);
     else next();
   }
 
-  static verifySignin({ body }, res, next) {
-    const { user } = body;
-    const userErr = validateRequest(user, 'Email or username', validateVarChar);
+  static verifySignin({ body: { user = '' } }, res, next) {
+    const userErr = checkStringTypeRequest(user, 'Email or username', validateVarChar);
     if (userErr) err400Res(res, userErr);
     else next();
   }

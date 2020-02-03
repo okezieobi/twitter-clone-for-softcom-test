@@ -32,6 +32,14 @@ export default class Errors {
     return `${title} already exists`;
   }
 
+  static isStringType(title) {
+    return `${title} must be string data type`;
+  }
+
+  static isNumberType(title) {
+    return `${title} must be number data type`;
+  }
+
   static notTweetOrReply(tweetOrReply) {
     return this.wrongCharLength(tweetOrReply, 280);
   }

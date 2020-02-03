@@ -20,7 +20,7 @@ export default class Errors {
   }
 
   static notJWT() {
-    return 'Token provided is does not match JWT format';
+    return 'Token provided does not match JWT format';
   }
 
   static wrongToken() {

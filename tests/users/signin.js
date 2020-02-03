@@ -7,13 +7,13 @@ import {
   pool,
 } from '../index';
 
+const { queryNone, queryAny } = pool;
+const { deleteData, users, createVarChars } = Test;
+const { returnRandomValue, createEmailVarChar } = new Test();
+
 chai.use(chaiHttp);
 
-describe('Test endpoints at "/api/v1/auth/signin" to sign in a User with POST', () => {
-  const { queryNone, queryAny } = pool;
-  const { deleteData, users } = Test;
-  const { returnRandomValue, createEmailVarChar } = new Test();
-
+describe('Test endpoint at "/api/v1/auth/signin" to sign in a User with POST', () => {
   before(async () => {
     await queryNone(deleteData());
   });
@@ -42,13 +42,14 @@ describe('Test endpoints at "/api/v1/auth/signin" to sign in a User with POST', 
     expect(response.body.data).to.have.property('username').to.be.a('string').to.equal(data.username);
     expect(response.body.data).to.have.property('email').to.be.a('string').to.equal(data.email);
     expect(response.body.data).to.have.property('type').to.be.a('string').to.equal('Client');
+    expect(response.body.data).to.have.property('createdOn').to.be.a('string');
     expect(response.body).to.have.property('token').to.be.a('string');
     expect(response.header).to.have.property('token').to.be.a('string');
     expect(response.body.data).to.have.property('followings').to.be.a('number');
     expect(response.body.data).to.have.property('followers').to.be.a('number');
   });
 
-  it('Should NOT sign in a User at "/api/v1/auth/signin" if user email is undefined or null or an empty string', async () => {
+  it('Should NOT sign in a User at "/api/v1/auth/signin" if email or username is undefined or null or an empty string', async () => {
     const data = { username: 'Obiedere', email: 'foobar@mail.com' };
     const testData = {
       user: returnRandomValue(data.email, data.username),
@@ -62,13 +63,27 @@ describe('Test endpoints at "/api/v1/auth/signin" to sign in a User with POST', 
     expect(response.body).to.have.property('error').to.be.a('string').to.equal('Email or username is required');
   });
 
-  it('Should NOT sign in a User at "/api/v1/auth/signin" if user email is undefined or null or an empty string', async () => {
+  it('Should NOT sign in a User at "/api/v1/auth/signin" if email or username is not string data type', async () => {
     const data = { username: 'Obiedere', email: 'foobar@mail.com' };
     const testData = {
       user: returnRandomValue(data.email, data.username),
       password: 'AbcDFer123*@is!',
     };
-    testData.user = createEmailVarChar(200, 10);
+    testData.user = 2000;
+    const response = await chai.request(app).post('/api/v1/auth/signin').send(testData);
+    expect(response).to.have.status(400);
+    expect(response.body).to.be.an('object');
+    expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
+    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Email or username must be string data type');
+  });
+
+  it('Should NOT sign in a User at "/api/v1/auth/signin" if email or username is more than 128 characters', async () => {
+    const data = { username: 'Obiedere', email: 'foobar@mail.com' };
+    const testData = {
+      user: returnRandomValue(data.email, data.username),
+      password: 'AbcDFer123*@is!',
+    };
+    testData.user = returnRandomValue(createEmailVarChar(200, 10), createVarChars(200));
     const response = await chai.request(app).post('/api/v1/auth/signin').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -152,7 +167,7 @@ describe('Test endpoints at "/api/v1/auth/signin" to sign in a User with POST', 
       user: returnRandomValue(data.email, data.username),
       password: 'AbcDFer123*@is!',
     };
-    testData.password = 'hdh';
+    testData.password = createVarChars(200);
     const response = await chai.request(app).post('/api/v1/auth/signin').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
