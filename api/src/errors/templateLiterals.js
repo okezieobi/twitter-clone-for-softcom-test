@@ -3,8 +3,12 @@ export default class Errors {
     return `${title} is required`;
   }
 
+  static wrongCharLength(title, length) {
+    return `${title} must be less than ${length} characters`;
+  }
+
   static notVarChar(title) {
-    return `${title} must be less than 128 characters`;
+    return this.wrongCharLength(title, 128);
   }
 
   static notNumbers(title) {
@@ -26,5 +30,17 @@ export default class Errors {
 
   static dataFound(title) {
     return `${title} already exists`;
+  }
+
+  static isStringType(title) {
+    return `${title} must be string data type`;
+  }
+
+  static isNumberType(title) {
+    return `${title} must be number data type`;
+  }
+
+  static notTweetOrReply(tweetOrReply) {
+    return this.wrongCharLength(tweetOrReply, 280);
   }
 }

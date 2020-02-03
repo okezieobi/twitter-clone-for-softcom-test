@@ -1,6 +1,8 @@
-import validator from './validator';
-import templateErrors from '../errors/templateLiterals';
-import literalErrors from '../errors/stringLiterals';
+import Validator from './validator';
+import TemplateErrors from '../errors/templateLiterals';
+import LiteralErrors from '../errors/stringLiterals';
+
+const { isRequired, isNumberType, isStringType } = TemplateErrors;
 
 export default class Requests {
   constructor() {
@@ -9,6 +11,8 @@ export default class Requests {
     this.validateVarChar = this.validateVarChar.bind(this);
     this.validateInteger = this.validateInteger.bind(this);
     this.validateNumber = this.validateNumber.bind(this);
+    this.validateJWT = this.validateJWT.bind(this);
+    this.validateTweetOrReply = this.validateTweetOrReply.bind(this);
   }
 
   static findError(...errorList) {
@@ -17,16 +21,28 @@ export default class Requests {
 
   static getFalseValue(request, requestTitle) {
     let err;
-    if (!request) err = templateErrors.isRequired(requestTitle);
+    if (!request) err = isRequired(requestTitle);
     return err;
   }
 
-  static validateWithTests(request, test, testError, requestTitle = undefined) {
+  static validateRequestStringType(request, requestTitle) {
     let err;
-    if (!validator[test](request) && !requestTitle) {
-      err = literalErrors[testError]();
-    } else if (!validator[test](request) && requestTitle) {
-      err = templateErrors[testError](requestTitle);
+    if (typeof request !== 'string') err = isStringType(requestTitle);
+    return err;
+  }
+
+  static validateRequestNumberType(request, requestTitle) {
+    let err;
+    if (typeof request !== 'number') err = isNumberType(requestTitle);
+    return err;
+  }
+
+  static validateWithTests(request, test, testError, requestTitle) {
+    let err;
+    if (!Validator[test](request) && !requestTitle) {
+      err = LiteralErrors[testError]();
+    } else if (!Validator[test](request) && requestTitle) {
+      err = TemplateErrors[testError](requestTitle);
     }
     return err;
   }
@@ -39,6 +55,10 @@ export default class Requests {
     return this.constructor.validateWithTests(password, 'validatePassword', 'notPassword');
   }
 
+  validateJWT(jwt) {
+    return this.constructor.validateWithTests(jwt, 'checkJWT', 'notJWT');
+  }
+
   validateVarChar(chars, charTitle) {
     return this.constructor.validateWithTests(chars, 'checkVarChar', 'notVarChar', charTitle);
   }
@@ -49,5 +69,9 @@ export default class Requests {
 
   validateInteger(integer, integerTitle) {
     return this.constructor.validateWithTests(integer, 'checkInteger', 'notInteger', integerTitle);
+  }
+
+  validateTweetOrReply(tweet, replyOrTweet) {
+    return this.constructor.validateWithTests(tweet, 'checkTweetOrReply', 'notTweetOrReply', replyOrTweet);
   }
 }

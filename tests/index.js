@@ -23,11 +23,11 @@ class Test {
     return seeder.users.insertData;
   }
 
-  static generateToken(id) {
+  static generateToken(id = 0) {
     return token.generate(id);
   }
 
-  static getRandomArrayIndex(array) {
+  static getRandomArrayIndex(array = []) {
     return Math.floor(Math.random() * array.length);
   }
 
@@ -35,7 +35,7 @@ class Test {
     return values[this.constructor.getRandomArrayIndex(values)];
   }
 
-  static createVarChars(length) {
+  static createVarChars(length = 0) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
@@ -45,13 +45,15 @@ class Test {
     return result;
   }
 
-  createEmailVarChar(userLength, domainLength) {
+  createEmailVarChar(userLength = 0, domainLength = 0) {
     return `${this.constructor.createVarChars(userLength)}@${this.constructor.createVarChars(domainLength)}.${this.constructor.createVarChars(3)}`;
   }
 }
 
+
 require('./users/signup');
 require('./users/signin');
+require('./tweets/createOne');
 
 export {
   expect,

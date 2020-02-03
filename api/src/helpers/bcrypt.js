@@ -1,11 +1,13 @@
 import bcrypt from 'bcryptjs';
 
+const { hashSync, compareSync, genSaltSync } = bcrypt;
+
 export default class Password {
   static hash(password = '') {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(12));
+    return hashSync(password, genSaltSync(12));
   }
 
   static compare(hashedPassword = '', password = '') {
-    return bcrypt.compareSync(password, hashedPassword);
+    return compareSync(password, hashedPassword);
   }
 }

@@ -13,14 +13,15 @@ export default class UserModel {
   }
 
   static responseData({
-    id, full_name, username, email, type, followers = 0, followings = 0,
+    id, full_name, username, email, type, created_on, followers = 0, followings = 0,
   }) {
     return {
       id: parseInt(id, 10),
       fullName: String(full_name),
-      userName: String(username),
+      username: String(username),
       email: String(email),
       type: String(type),
+      createdOn: Date(created_on),
       followers,
       followings,
     };
