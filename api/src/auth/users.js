@@ -27,7 +27,8 @@ class UserAuth {
     this.authSignup = this.authSignup.bind(this);
     this.verifyPassword = this.verifyPassword.bind(this);
     this.authSignin = this.authSignin.bind(this);
-    this.authToken = this.authToken.bind(this);
+    this.validateToken = this.validateToken.bind(this);
+    this.verifyToken = this.verifyToken.bind(this);
     this.authenticateAll = this.authenticateAll.bind(this);
   }
 
@@ -63,10 +64,16 @@ class UserAuth {
     }
   }
 
-  async authToken({ headers: { token = '' } }, res, next) {
+  validateToken({ headers: { token = '' } }, res, next) {
     if (!token) return err400Res(res, tokenIsRequired());
     const tokenErr = validateJWT(token);
     if (tokenErr) return err400Res(res, tokenErr);
+    this.token = token;
+    return next();
+  }
+
+  async verifyToken(req, res, next) {
+    const { token } = this;
     const { userId, message, name } = await verify(token);
     if (name || message) return err400Res(res, { name, message }); // jwt error
     const checkId = checkInteger(userId);

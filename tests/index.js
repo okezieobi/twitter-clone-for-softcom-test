@@ -23,6 +23,10 @@ class Test {
     return seeder.users.insertData;
   }
 
+  static tweets() {
+    return seeder.tweets.insertData;
+  }
+
   static generateToken(id = 0) {
     return token.generate(id);
   }
@@ -54,6 +58,7 @@ class Test {
 require('./users/signup');
 require('./users/signin');
 require('./tweets/createOne');
+require('./tweets/getAllByUserId');
 
 export {
   expect,

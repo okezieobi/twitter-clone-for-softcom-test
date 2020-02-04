@@ -1,7 +1,9 @@
 /* eslint-disable camelcase */
 import Numbers from '../helpers/uniqueNos';
+import SharedModel from './index';
 
 const { uniqueIds } = Numbers;
+const { handleArrayData } = SharedModel;
 
 export default class TweetModels {
   static requestData(tweet = '', id = 0) {
@@ -14,5 +16,9 @@ export default class TweetModels {
       tweet: String(tweet),
       createdOn: Date(created_on),
     };
+  }
+
+  static responseArray(array) {
+    return handleArrayData(array, TweetModels.responseData);
   }
 }
