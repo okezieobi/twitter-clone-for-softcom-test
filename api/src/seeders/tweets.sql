@@ -12,5 +12,10 @@ INSERT INTO tweets
 VALUES
     (3030303030303, 'This is my 2nd tweet', 5050505050505);
 
+INSERT INTO tweets
+    (id, tweet, "user_id")
+VALUES
+    (8080808080808, 'This is my 3nd tweet', 5050505050505);
+
 SELECT *
 FROM tweets;

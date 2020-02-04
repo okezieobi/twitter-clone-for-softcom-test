@@ -6,15 +6,15 @@ const {
 
 export default class Patterns {
   static validateEmail(email = '') {
-    return isEmail(email) && isLength(email, { max: 128 });
+    return isEmail(email || String(email)) && isLength(email || String(email), { max: 128 });
   }
 
   static validatePassword(password = '') {
-    return isLength(password, { min: 8, max: 128 });
+    return isLength(password || String(password), { min: 8, max: 128 });
   }
 
   static checkCharLength(char = '', length = 0) {
-    return isLength(char, { max: length });
+    return isLength(char || String(char), { max: length });
   }
 
   static checkVarChar(varChar = '') {
@@ -22,15 +22,15 @@ export default class Patterns {
   }
 
   static checkNumber(number = '') {
-    return isNumeric(number) && parseInt(number, 10) >= 0;
+    return isNumeric(number || String(number)) && parseInt(number || String(number), 10) >= 0;
   }
 
   static checkInteger(integer = '') {
-    return isInt(integer) && parseInt(integer, 10) >= 0;
+    return isInt(integer || String(integer)) && parseInt(integer || String(integer), 10) >= 0;
   }
 
   static checkJWT(jwt = '') {
-    return isJWT(jwt);
+    return isJWT(jwt || String(jwt));
   }
 
   static checkTweetOrReply(tweetOrReply = '') {

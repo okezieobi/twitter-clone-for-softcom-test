@@ -1,0 +1,11 @@
+paths:
+  /tweets/:                # path of the user from your endpoint
+    get:                 # endpoint request type (post request)
+      tags:               # Tag property
+        - Tweet            # Value of the tag
+      summary: get all tweets by user id as an authenticated user
+      security:
+        - ApiKeyAuth: []
+      responses:          # server responses
+        200:
+          description: An array of objects of tweets by user id
