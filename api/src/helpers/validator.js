@@ -21,9 +21,11 @@ export default class Patterns {
     return this.checkCharLength(varChar, 128);
   }
 
+  /*
   static checkNumber(number = '') {
     return isNumeric(number || String(number)) && parseInt(number || String(number), 10) >= 0;
   }
+  */
 
   static checkInteger(integer = '') {
     return isInt(integer || String(integer)) && parseInt(integer || String(integer), 10) >= 0;
