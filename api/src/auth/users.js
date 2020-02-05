@@ -41,8 +41,8 @@ class UserAuth {
 
   async authSignin({ body: { user = '' } }, res, next) {
     try {
-      this.verifyUser = await queryOneOrNone(authSignin(), [user]);
-      const resErr = this.verifyUser ? next() : err404Res(res, userNotExists());
+      this.registeredUser = await queryOneOrNone(authSignin(), [user]);
+      const resErr = this.registeredUser ? next() : err404Res(res, userNotExists());
       return resErr;
     } catch (error) {
       return displayErrors(error);
@@ -50,9 +50,9 @@ class UserAuth {
   }
 
   async verifyPassword({ body: { password = '' } }, res, next) {
-    const { verifyUser } = this;
+    const { registeredUser } = this;
     try {
-      const verifyPassword = await compare(verifyUser.password, password);
+      const verifyPassword = await compare(registeredUser.password, password);
       const resErr = verifyPassword ? next() : err400Res(res, wrongPassword());
       return resErr;
     } catch (error) {
@@ -74,8 +74,8 @@ class UserAuth {
   async authenticateAll(req, res, next) {
     const { userId } = this;
     try {
-      this.findUser = await queryOneOrNone(findUserById(), [userId]);
-      const resErr = this.findUser ? next() : err404Res(res, wrongToken());
+      this.authUser = await queryOneOrNone(findUserById(), [userId]);
+      const resErr = this.authUser ? next() : err404Res(res, wrongToken());
       return resErr;
     } catch (error) {
       return displayErrors(error);

@@ -1,4 +1,4 @@
-export default class TweetsAndReplies {
+export default class TweetsOrReplies {
   static createTweet() {
     return 'INSERT INTO tweets (id, tweet, "user_id") VALUES ($1, $2, $3) RETURNING tweet, id, created_on';
   }
@@ -12,7 +12,7 @@ export default class TweetsAndReplies {
   }
 
   static createTweetReply() {
-    return 'INSERT INTO tweetreplies (id, reply, "user_id", "tweet_id") VALUES ($1, $2, #3, $4) RETURNING * ';
+    return 'INSERT INTO tweetreplies (id, reply, "user_id", "tweet_id") VALUES ($1, $2, $3, $4) RETURNING * ';
   }
 
   static findTweetReplyById() {

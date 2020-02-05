@@ -9,7 +9,7 @@ import {
 
 const { queryNone, queryAny } = pool;
 const {
-  deleteData, users, tweetsAndReplies, generateToken, createVarChars, getRandomArrayIndex,
+  deleteData, users, tweetsOrReplies, generateToken, createVarChars, getRandomArrayIndex,
 } = Test;
 const { returnRandomValue } = new Test();
 
@@ -25,7 +25,7 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
   });
 
   before(async () => {
-    await queryAny(tweetsAndReplies());
+    await queryAny(tweetsOrReplies());
   });
 
   after(async () => {

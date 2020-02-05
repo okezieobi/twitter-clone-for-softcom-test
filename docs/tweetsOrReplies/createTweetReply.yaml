@@ -1,26 +1,25 @@
 paths:
-  /tweets/:                # path of the user from your endpoint
+  /tweets_replies/:                # path of the user from your endpoint
     post:                 # endpoint request type (post request)
       tags:               # Tag property
         - Tweet            # Value of the tag
-      summary: creates a new tweet as an authenticated user
+      summary: creates a new tweet reply as an authenticated user
       security:
        - ApiKeyAuth: []
-         requestBody:
+      requestBody:
          required: true
          content:
           application/json:
             schema:
-              $ref: '#/components/schemas/tweet'
+              $ref: '#/components/schemas/tweet_replies'
       responses:          # server responses
-        201:
-          description: An object with tweet details
+        200:
+          description: An object with reply details to a tweet
 components:        # Schema definition for request body
  schemas:
-  tweet:
-    type: object
+  tweet_replies:
     properties:
-          tweet:
+          reply:
             type: string
     required:
-      - tweet
+      - reply

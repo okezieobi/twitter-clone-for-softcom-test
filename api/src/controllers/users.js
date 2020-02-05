@@ -33,12 +33,12 @@ class UserController {
   }
 
   async getFollows(req, res, next) {
-    const { verifyUser } = authenticateUsers;
-    const { id } = verifyUser;
+    const { registeredUser } = authenticateUsers;
+    const { id } = registeredUser;
     try {
       const { followings, followers } = await getFollows(pool, id);
-      verifyUser.followings = followings;
-      verifyUser.followers = followers;
+      registeredUser.followings = followings;
+      registeredUser.followers = followers;
       this.getFollowsNext = next();
       return this.getFollowsNext;
     } catch (error) {
@@ -48,10 +48,15 @@ class UserController {
 
   sendAuthResponse(req, res) {
     const { newUser } = this;
-    const { verifyUser } = authenticateUsers;
+    const { registeredUser } = authenticateUsers;
     try {
-      if (verifyUser) return auth200Res(res, responseData(verifyUser), generate(verifyUser.id));
-      return auth201Res(res, responseData(newUser), generate(newUser.id));
+      let response;
+      if (registeredUser) {
+        response = auth200Res(res, responseData(registeredUser), generate(registeredUser.id));
+      } else {
+        response = auth201Res(res, responseData(newUser), generate(newUser.id));
+      }
+      return response;
     } catch (error) {
       return displayErrors(error);
     }
