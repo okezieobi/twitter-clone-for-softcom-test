@@ -1,10 +1,20 @@
 /*
-Connect to database as interviewprojects and RUN  \c softcomtwitterclone \i api/src/tables/replies.sql
+Connect to database as interviewprojects and RUN  \c softcomtwitterclone \i api/src/tables/tweets.sql
 */
 
-DROP TABLE IF EXISTS replytweets;
+DROP TABLE IF EXISTS tweets;
 
-CREATE TABLE replytweets
+CREATE TABLE tweets
+(
+    id         bigint       PRIMARY KEY NOT NULL,
+    tweet      varchar(280) NOT NULL,
+    created_on timestamptz  DEFAULT NOW(),
+    "user_id"  bigint       NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS tweetreplies;
+
+CREATE TABLE tweetreplies
 (
     id         bigint       PRIMARY KEY NOT NULL,
     reply      varchar(280) NOT NULL,
@@ -22,5 +32,5 @@ CREATE TABLE replies
     reply      varchar(280) NOT NULL,
     created_on timestamptz  DEFAULT NOW(),
     "user_id"  bigint       NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    "reply_id" bigint       NOT NULL REFERENCES replytweets(id)
+    "reply_id" bigint       NOT NULL REFERENCES tweetreplies(id)
 );

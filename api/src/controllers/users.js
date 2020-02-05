@@ -50,17 +50,10 @@ class UserController {
     const { newUser } = this;
     const { verifyUser } = authenticateUsers;
     try {
-      if (verifyUser) {
-        const signInRes = responseData(verifyUser);
-        const signinToken = generate(verifyUser.id);
-        auth200Res(res, signInRes, signinToken);
-      } else {
-        const signUpRes = responseData(newUser);
-        const signupToken = generate(newUser.id);
-        auth201Res(res, signUpRes, signupToken);
-      }
+      if (verifyUser) return auth200Res(res, responseData(verifyUser), generate(verifyUser.id));
+      return auth201Res(res, responseData(newUser), generate(newUser.id));
     } catch (error) {
-      throw displayErrors(error);
+      return displayErrors(error);
     }
   }
 }

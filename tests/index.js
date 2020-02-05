@@ -23,8 +23,8 @@ class Test {
     return seeder.users.insertData;
   }
 
-  static tweets() {
-    return seeder.tweets.insertData;
+  static tweetsAndReplies() {
+    return seeder.tweetsAndReplies.insertData;
   }
 
   static generateToken(id = 0) {

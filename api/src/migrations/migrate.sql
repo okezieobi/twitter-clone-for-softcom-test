@@ -8,6 +8,5 @@ CREATE DATABASE softcomtwitterclone;
 
 \c softcomtwitterclone
 \i api/src/tables/users.sql
-\i api/src/tables/tweets.sql
-\i api/src/tables/replies.sql
+\i api/src/tables/tweetsAndReplies.sql
 \i api/src/tables/follows.sql

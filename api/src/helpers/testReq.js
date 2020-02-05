@@ -20,14 +20,12 @@ export default class Requests {
   }
 
   static getFalseValue(request, requestTitle) {
-    let err;
-    if (!request) err = isRequired(requestTitle);
+    const err = !request ? isRequired(requestTitle) : false;
     return err;
   }
 
   static validateRequestStringType(request, requestTitle) {
-    let err;
-    if (typeof request !== 'string') err = isStringType(requestTitle);
+    const err = typeof request !== 'string' ? isStringType(requestTitle) : false;
     return err;
   }
 

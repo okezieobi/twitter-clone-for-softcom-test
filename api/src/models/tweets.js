@@ -6,8 +6,8 @@ const { uniqueIds } = Numbers;
 const { handleArrayData } = SharedModel;
 
 export default class TweetModels {
-  static requestData(tweet = '', id = 0) {
-    return [uniqueIds(), tweet, id];
+  static requestData(tweet = '', userId = 0) {
+    return [uniqueIds(), tweet, userId];
   }
 
   static responseData({ tweet, id, created_on }) {

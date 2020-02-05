@@ -13,11 +13,8 @@ export default {
   users: {
     insertData: Queries.sql('../seeders/users.sql'),
   },
-  tweets: {
-    insertData: Queries.sql('../seeders/tweets.sql'),
-  },
-  replies: {
-    insertData: Queries.sql('../seeders/replies.sql'),
+  tweetsAndReplies: {
+    insertData: Queries.sql('../seeders/tweetsAndReplies.sql'),
   },
   follows: {
     insertData: Queries.sql('../seeders/follows.sql'),

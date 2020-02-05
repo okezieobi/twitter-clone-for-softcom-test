@@ -1,19 +1,38 @@
 /*
-Connect to db as interviewprojects and RUN  \c softcomtwitterclone \i api/src/seeders/replies.sql \q
+Connect to db as interviewprojects and RUN  \c softcomtwitterclone \i api/src/seeders/tweets.sql \q
 */
 
-INSERT INTO replytweets
+INSERT INTO tweets
+    (id, tweet, "user_id")
+VALUES
+    (2020202020202, 'This is my first tweet', 1010101010101);
+
+INSERT INTO tweets
+    (id, tweet, "user_id")
+VALUES
+    (3030303030303, 'This is my 2nd tweet', 5050505050505);
+
+INSERT INTO tweets
+    (id, tweet, "user_id")
+VALUES
+    (8080808080808, 'This is my 3nd tweet', 5050505050505);
+
+SELECT *
+FROM tweets;
+
+
+INSERT INTO tweetreplies
     (id, reply, "user_id", "tweet_id")
 VALUES
     (4040404040404, 'This is my 1st reply to a tweet', 1010101010101, 2020202020202);
 
-INSERT INTO replytweets
+INSERT INTO tweetreplies
     (id, reply, "user_id", "tweet_id")
 VALUES
     (6060606060606, 'This is my 2nd reply to a tweet', 5050505050505, 3030303030303);
 
 SELECT *
-FROM replytweets;
+FROM tweetreplies;
 
 INSERT INTO replies
     (id, reply, "user_id", "reply_id")
