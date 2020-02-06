@@ -8,8 +8,8 @@ CASCADE;
 TRUNCATE tweets
 CASCADE;
 
-TRUNCATE replies
+TRUNCATE tweetreplies
 CASCADE;
 
-TRUNCATE tweets
+TRUNCATE replies
 CASCADE;

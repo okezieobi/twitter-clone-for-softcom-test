@@ -9,13 +9,13 @@ import {
 
 const { queryNone, queryAny } = pool;
 const {
-  deleteData, users, tweets, generateToken, createVarChars, getRandomArrayIndex,
+  deleteData, users, tweetsOrReplies, generateToken, createVarChars, getRandomArrayIndex,
 } = Test;
 const { returnRandomValue } = new Test();
 
 chai.use(chaiHttp);
 
-describe('Test endpoint at "/api/v1/tweets" to get all tweets by user id as an authenticated user with GET', () => {
+describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by user id as an authenticated user with GET', () => {
   before(async () => {
     await queryNone(deleteData());
   });
@@ -25,7 +25,7 @@ describe('Test endpoint at "/api/v1/tweets" to get all tweets by user id as an a
   });
 
   before(async () => {
-    await queryAny(tweets());
+    await queryAny(tweetsOrReplies());
   });
 
   after(async () => {

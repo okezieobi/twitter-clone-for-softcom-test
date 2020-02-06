@@ -6,7 +6,7 @@ paths:
       summary: creates a new tweet as an authenticated user
       security:
        - ApiKeyAuth: []
-         requestBody:
+      requestBody:
          required: true
          content:
           application/json:

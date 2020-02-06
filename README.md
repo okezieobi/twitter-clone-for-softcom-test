@@ -4,7 +4,7 @@ A Twitter clone for a tech interview with Softcom
 ## OpenAPI docs
 https://twitter-clone-softcom-test.herokuapp.com/api-docs/
 
-## Test Coverage, Continious Integration (CI) and Maintainability
+## Test Coverage, Continuous Integration (CI) and Maintainability
 Travis [![Build Status](https://travis-ci.com/okezieobi/twitter-clone-for-softcom-test.svg?branch=develop)](https://travis-ci.com/okezieobi/twitter-clone-for-softcom-test)
 
 CodeClimate [![Maintainability](https://api.codeclimate.com/v1/badges/c080a9ec44ba48405e44/maintainability)](https://codeclimate.com/github/okezieobi/twitter-clone-for-softcom-test/maintainability)

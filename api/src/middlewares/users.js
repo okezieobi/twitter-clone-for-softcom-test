@@ -1,21 +1,18 @@
 import UserValidator from '../data/users';
-import userAuth from '../auth/users';
+import UserAuth, { singletonUserAuth } from '../auth/users';
 import MiddlewareHelper from './middleware';
-import userController from '../controllers/users';
 
 const { validatePassword, verifySignup, verifySignin } = UserValidator;
-const { authSignup, authSignin, verifyPassword } = userAuth;
-const { addUser, getFollows } = userController;
+const { authSignup } = UserAuth;
+const { authSignin, verifyPassword } = singletonUserAuth;
 const { routeCallbacks } = MiddlewareHelper;
 
 export default class UserMiddleware {
   static signup() {
-    return routeCallbacks(verifySignup, validatePassword,
-      authSignup, addUser);
+    return routeCallbacks(verifySignup, validatePassword, authSignup);
   }
 
   static signin() {
-    return routeCallbacks(verifySignin, validatePassword,
-      authSignin, verifyPassword, getFollows);
+    return routeCallbacks(verifySignin, validatePassword, authSignin, verifyPassword);
   }
 }

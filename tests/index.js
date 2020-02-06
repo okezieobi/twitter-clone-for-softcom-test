@@ -23,8 +23,8 @@ class Test {
     return seeder.users.insertData;
   }
 
-  static tweets() {
-    return seeder.tweets.insertData;
+  static tweetsOrReplies() {
+    return seeder.tweetsOrReplies.insertData;
   }
 
   static generateToken(id = 0) {
@@ -54,11 +54,11 @@ class Test {
   }
 }
 
-
 require('./users/signup');
 require('./users/signin');
-require('./tweets/createOne');
-require('./tweets/getAllByUserId');
+require('./tweetsOrReplies/createTweet');
+require('./tweetsOrReplies/getTweetsByUserId');
+require('./tweetsOrReplies/createTweetReply');
 
 export {
   expect,
