@@ -15,7 +15,9 @@ export default class TweetsOrReplies {
     return 'INSERT INTO tweetreplies (id, reply, "user_id", "tweet_id") VALUES ($1, $2, $3, $4) RETURNING id, reply, created_on, tweet_id ';
   }
 
+  /*
   static findTweetReplyById() {
     return 'SELECT * FROM tweetreplies WHERE id = $1';
   }
+  */
 }
