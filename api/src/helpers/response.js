@@ -37,17 +37,21 @@ export default class HttpResponse {
     return this.constructor.response(res, 404, 'error', err404Message);
   }
 
+  /*
   err403Res(res, err403Message) {
     return this.constructor.response(res, 403, 'error', err403Message);
   }
+  */
 
   success200Res(res, success200Data) {
     return this.constructor.response(res, 200, 'data', success200Data);
   }
 
+  /*
   success200ResMessage(res, success200Message) {
     return this.constructor.response(res, 200, 'message', success200Message);
   }
+  */
 
   success201Res(res, success201Data) {
     return this.constructor.response(res, 201, 'data', success201Data);
