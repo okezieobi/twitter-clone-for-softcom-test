@@ -1,6 +1,6 @@
 import database from '../db/pgConnect';
 import Token from '../helpers/jwt';
-import authenticateUsers from '../auth/users';
+import { singletonUserAuth } from '../auth/users';
 import HttpResponse from '../helpers/response';
 import Models from '../models/users';
 import UserQueries from '../queries/users';
@@ -18,45 +18,29 @@ const { queryOne, pool } = database;
 class UserController {
   constructor() {
     this.addUser = this.addUser.bind(this);
-    this.sendAuthResponse = this.sendAuthResponse.bind(this);
     this.getFollows = this.getFollows.bind(this);
   }
 
-  async addUser({ body }, res, next) {
+  async addUser({ body }, res) {
     const arrayData = requestData(body);
     try {
       this.newUser = await queryOne(createClient(), arrayData);
-      return next();
+      const { id } = this.newUser;
+      return auth201Res(res, responseData(this.newUser), generate(id));
     } catch (error) {
       return displayErrors(error);
     }
   }
 
-  async getFollows(req, res, next) {
-    const { registeredUser } = authenticateUsers;
+  async getFollows(req, res) {
+    const { registeredUser } = singletonUserAuth;
     const { id } = registeredUser;
     try {
-      const { followings, followers } = await getFollows(pool, id);
+      this.follows = await getFollows(pool, id);
+      const { followings, followers } = this.follows;
       registeredUser.followings = followings;
       registeredUser.followers = followers;
-      this.getFollowsNext = next();
-      return this.getFollowsNext;
-    } catch (error) {
-      return displayErrors(error);
-    }
-  }
-
-  sendAuthResponse(req, res) {
-    const { newUser } = this;
-    const { registeredUser } = authenticateUsers;
-    try {
-      let response;
-      if (registeredUser) {
-        response = auth200Res(res, responseData(registeredUser), generate(registeredUser.id));
-      } else {
-        response = auth201Res(res, responseData(newUser), generate(newUser.id));
-      }
-      return response;
+      return auth200Res(res, responseData(registeredUser), generate(id));
     } catch (error) {
       return displayErrors(error);
     }

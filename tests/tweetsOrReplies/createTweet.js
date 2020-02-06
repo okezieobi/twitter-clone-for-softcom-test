@@ -15,7 +15,7 @@ const { returnRandomValue } = new Test();
 
 chai.use(chaiHttp);
 
-describe('Test endpoint at "/api/v1/tweets" to create a tweet as an authenticared User with POST', () => {
+describe('Test endpoint at "/api/v1/tweets" to create a tweet as an authenticated User with POST', () => {
   before(async () => {
     await queryNone(deleteData());
   });
@@ -28,7 +28,7 @@ describe('Test endpoint at "/api/v1/tweets" to create a tweet as an authenticare
     await queryNone(deleteData());
   });
 
-  it('Should create a tweet at "/api/v1/tweets" as an auhenticated user with POST if all input fields are valid', async () => {
+  it('Should create a tweet at "/api/v1/tweets" as an authenticated user with POST if all input fields are valid', async () => {
     const testData = { tweet: 'First tweet' };
     const token = generateToken('1010101010101');
     const response = await chai.request(app).post('/api/v1/tweets').set('token', token).send(testData);

@@ -1,5 +1,5 @@
 paths:
-  /tweets_replies/:                # path of the user from your endpoint
+  /tweets/:id/:                # path of the user from your endpoint
     post:                 # endpoint request type (post request)
       tags:               # Tag property
         - Tweet            # Value of the tag

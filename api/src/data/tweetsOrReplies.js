@@ -14,8 +14,8 @@ export default class TweetOrReplyValidator {
   }
 
   static validateTweetId({ params: { id = '' } }, res, next) {
-    const findTweetErr = checkStringTypeRequest(id, 'Tweet id', validateInteger);
-    const resErr = findTweetErr ? err400Res(res, findTweetErr) : next();
+    const isTweetIdErr = validateInteger(id, 'Tweet id');
+    const resErr = isTweetIdErr ? err400Res(res, isTweetIdErr) : next();
     return resErr;
   }
 

@@ -3,10 +3,10 @@ import TweetOrMiddleware from '../middlewares/tweetsOrReplies';
 import router from './router';
 
 const { createTweet, getTweets, createTweetReply } = TweetOrMiddleware;
-const { sendResponse } = tweetOrController;
+const { addTweetReply, addTweet, findTweetsByUserId } = tweetOrController;
 
-router.post('/tweets', createTweet(), sendResponse);
-router.get('/tweets', getTweets(), sendResponse);
-router.post('/tweet_replies', createTweetReply(), sendResponse);
+router.post('/tweets', createTweet(), addTweet);
+router.get('/tweets', getTweets(), findTweetsByUserId);
+router.post('/tweets/:id', createTweetReply(), addTweetReply);
 
 export default router;

@@ -20,20 +20,19 @@ const { verify } = Jwt;
 const { checkInteger } = Validator;
 const { notInteger } = TemplateErrors;
 
-class UserAuth {
+export default class UserAuth {
   constructor() {
-    this.authSignup = this.authSignup.bind(this);
     this.verifyPassword = this.verifyPassword.bind(this);
     this.authSignin = this.authSignin.bind(this);
     this.authenticateAll = this.authenticateAll.bind(this);
     this.verifyToken = this.verifyToken.bind(this);
   }
 
-  async authSignup({ body: { username = '', email = '' } }, res, next) {
+  static async authSignup({ body: { username = '', email = '' } }, res, next) {
     try {
       const newUser = await queryOneOrNone(authSignup(), [email, username]);
-      this.signupNext = newUser ? err400Res(res, userExists()) : next();
-      return this.signupNext;
+      const signupNext = newUser ? err400Res(res, userExists()) : next();
+      return signupNext;
     } catch (error) {
       return displayErrors(error);
     }
@@ -83,4 +82,8 @@ class UserAuth {
   }
 }
 
-export default new UserAuth();
+const singletonUserAuth = new UserAuth();
+
+export {
+  singletonUserAuth,
+};
