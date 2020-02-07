@@ -4,23 +4,23 @@ const { displayErrors } = Logger;
 
 export default class Follows {
   static getFollowings() {
-    return 'SELECT FROM "following" WHERE "user_id" = $1';
+    return 'SELECT * FROM "following" WHERE "user_id" = $1';
   }
 
   static getFollowers() {
-    return 'SELECT FROM followers WHERE "user_id" = $1';
+    return 'SELECT * FROM followers WHERE "user_id" = $1';
   }
 
   static findFollow() {
-    return 'SELECT FROM "following" WHERE "following_id" = $1';
+    return 'SELECT * FROM "following" WHERE "following_id" = $1';
   }
 
   static addFollow() {
-    return 'INSERT INTO following ("user_id", "following_id") VALUES ($1, $2)';
+    return 'INSERT INTO following (id, "user_id", "following_id") VALUES ($3, $1, $2)';
   }
 
   static createFollower() {
-    return 'INSERT INTO followers ("user_id", follower_id) VALUES ($2, $1)';
+    return 'INSERT INTO followers (id, "user_id", follower_id) VALUES ($4, $2, $1)';
   }
 
   static async createFollow(db, followArrayData) {

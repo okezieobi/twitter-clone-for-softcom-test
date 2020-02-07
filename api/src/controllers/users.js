@@ -5,6 +5,7 @@ import HttpResponse from '../helpers/response';
 import Models from '../models/users';
 import UserQueries from '../queries/users';
 import Logger from '../helpers/logger';
+import { singletonUserAuth } from '../auth/users';
 
 const { auth200Res, auth201Res } = new HttpResponse();
 const { requestData, responseData } = Models;
@@ -31,10 +32,13 @@ class UserController {
   }
 
   sendAuthRes(req, res) {
-    const { registeredUserWithFollows } = followController;
-    const { id } = registeredUserWithFollows;
-    this.res = res;
-    return auth200Res(this.res, responseData(registeredUserWithFollows), generate(id));
+    const { retrievedFollows } = followController;
+    const { followers, followings } = retrievedFollows;
+    const { registeredUser } = singletonUserAuth;
+    registeredUser.followings = followings;
+    registeredUser.followers = followers;
+    this.authRes = auth200Res(res, responseData(registeredUser), generate(registeredUser.id));
+    return this.authRes;
   }
 }
 
