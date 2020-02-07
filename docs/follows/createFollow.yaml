@@ -1,0 +1,26 @@
+paths:
+  /follows/:                # path of the user from your endpoint
+    post:                 # endpoint request type (post request)
+      tags:               # Tag property
+        - Follow            # Value of the tag
+      summary: creates a new follow as an authenticated user
+      security:
+       - ApiKeyAuth: []
+      requestBody:
+         required: true
+         content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/follow'
+      responses:          # server responses
+        201:
+          description: An message indicating following another was successful
+components:        # Schema definition for request body
+ schemas:
+  follow:
+    type: object
+    properties:
+          username:
+            type: string
+    required:
+      - username

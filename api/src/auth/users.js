@@ -9,7 +9,9 @@ import Validator from '../helpers/validator';
 import TemplateErrors from '../errors/templateLiterals';
 
 const { err400Res, err404Res } = new HttpResponse();
-const { authSignup, authSignin, findUserById } = Queries;
+const {
+  authSignup, authSignin, findUserById, findUserByUsername,
+} = Queries;
 const { queryOneOrNone } = database;
 const { displayErrors } = Logger;
 const { compare } = Bcrypt;
@@ -18,7 +20,7 @@ const {
 } = literalErrors;
 const { verify } = Jwt;
 const { checkInteger } = Validator;
-const { notInteger } = TemplateErrors;
+const { notInteger, dataNotFound } = TemplateErrors;
 
 export default class UserAuth {
   constructor() {
@@ -26,6 +28,7 @@ export default class UserAuth {
     this.authSignin = this.authSignin.bind(this);
     this.authenticateAll = this.authenticateAll.bind(this);
     this.verifyToken = this.verifyToken.bind(this);
+    this.authUsername = this.authUsername.bind(this);
   }
 
   static async authSignup({ body: { username = '', email = '' } }, res, next) {
@@ -75,6 +78,16 @@ export default class UserAuth {
     try {
       this.authUser = await queryOneOrNone(findUserById(), [userId]);
       const resErr = this.authUser ? next() : err404Res(res, wrongToken());
+      return resErr;
+    } catch (error) {
+      return displayErrors(error);
+    }
+  }
+
+  async authUsername({ body: { username = '' } }, res, next) {
+    try {
+      this.verifiedUser = await queryOneOrNone(findUserByUsername(), username);
+      const resErr = this.verifiedUser ? next() : err404Res(res, dataNotFound('User'));
       return resErr;
     } catch (error) {
       return displayErrors(error);

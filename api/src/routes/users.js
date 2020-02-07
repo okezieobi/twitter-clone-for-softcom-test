@@ -1,6 +1,6 @@
 import userController from '../controllers/users';
 import router from './router';
-import UserMiddleware from '../middlewares/users';
+import UserMiddleware from '../middleware/users';
 
 const { addUser, getFollows } = userController;
 const { signup, signin } = UserMiddleware;

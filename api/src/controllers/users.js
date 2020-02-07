@@ -10,7 +10,7 @@ import Logger from '../helpers/logger';
 const { auth200Res, auth201Res } = new HttpResponse();
 const { requestData, responseData } = Models;
 const { createClient } = UserQueries;
-const { getFollows } = new FollowQueries();
+const { getFollows } = FollowQueries;
 const { displayErrors } = Logger;
 const { generate } = Token;
 const { queryOne, pool } = database;

@@ -1,7 +1,7 @@
 import validator from 'validator';
 
 const {
-  isEmail, isNumeric, isInt, isLength, isJWT,
+  isEmail, isInt, isLength, isJWT,
 } = validator;
 
 export default class Patterns {

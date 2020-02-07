@@ -1,5 +1,5 @@
 import tweetOrController from '../controllers/tweetsOrReplies';
-import TweetOrMiddleware from '../middlewares/tweetsOrReplies';
+import TweetOrMiddleware from '../middleware/tweetsOrReplies';
 import router from './router';
 
 const { createTweet, getTweets, createTweetReply } = TweetOrMiddleware;

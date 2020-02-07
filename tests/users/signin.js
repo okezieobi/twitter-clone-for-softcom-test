@@ -8,7 +8,9 @@ import {
 } from '../index';
 
 const { queryNone, queryAny } = pool;
-const { deleteData, users, createVarChars } = Test;
+const {
+  deleteData, users, createVarChars, getRandomArrayIndex,
+} = Test;
 const { returnRandomValue, createEmailVarChar } = new Test();
 
 chai.use(chaiHttp);
@@ -45,8 +47,20 @@ describe('Test endpoint at "/api/v1/auth/signin" to sign in a User with POST', (
     expect(response.body.data).to.have.property('createdOn').to.be.a('string');
     expect(response.body).to.have.property('token').to.be.a('string');
     expect(response.header).to.have.property('token').to.be.a('string');
-    expect(response.body.data).to.have.property('followings').to.be.a('number');
-    expect(response.body.data).to.have.property('followers').to.be.a('number');
+    expect(response.body.data).to.have.property('followings').to.be.an('array');
+    const { followings } = response.body.data;
+    const followingRandomIndex = getRandomArrayIndex(followings);
+    if (followings.length > 0) {
+      expect(response.body.data.followings[followingRandomIndex]).to.have.property('user_id').to.be.a('number');
+      expect(response.body.data.followings[followingRandomIndex]).to.have.property('following_id').to.be.a('number');
+    }
+    expect(response.body.data).to.have.property('followers').to.be.an('array');
+    const { followers } = response.body.data;
+    const followersRandomIndex = getRandomArrayIndex(followers);
+    if (followers.length > 0) {
+      expect(response.body.data.followers[followersRandomIndex]).to.have.property('user_id').to.be.a('number');
+      expect(response.body.data.followers[followersRandomIndex]).to.have.property('follower_id').to.be.a('number');
+    }
   });
 
   it('Should NOT sign in a User at "/api/v1/auth/signin" if email or username is undefined or null or an empty string', async () => {

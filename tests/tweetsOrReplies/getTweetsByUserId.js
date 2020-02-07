@@ -40,11 +40,11 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(200);
     expect(response.body).to.have.property('data').to.be.an('array');
     const { data } = response.body;
-    const randomlySelectedData = getRandomArrayIndex(data);
+    const randomIndex = getRandomArrayIndex(data);
     if (data.length > 0) {
-      expect(response.body.data[randomlySelectedData]).to.have.property('id').to.be.a('number');
-      expect(response.body.data[randomlySelectedData]).to.have.property('tweet').to.be.a('string');
-      expect(response.body.data[randomlySelectedData]).to.have.property('createdOn').to.be.a('string');
+      expect(response.body.data[randomIndex]).to.have.property('id').to.be.a('number');
+      expect(response.body.data[randomIndex]).to.have.property('tweet').to.be.a('string');
+      expect(response.body.data[randomIndex]).to.have.property('createdOn').to.be.a('string');
     }
   });
 
