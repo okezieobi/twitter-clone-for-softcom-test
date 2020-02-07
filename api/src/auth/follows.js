@@ -13,11 +13,11 @@ const { displayErrors } = Logger;
 
 export default class FollowAuth {
   static async verifyFollow(req, res, next) {
-    const { authUser, verifiedUser } = singletonUserAuth;
-    const { username } = authUser;
-    if (verifiedUser.id === authUser.id) return err400Res(res, `${username} can not follow self`);
     try {
-      const authFollow = await queryOneOrNone(findFollow(), verifiedUser.id);
+      const { authUser, registeredUser } = singletonUserAuth;
+      const { username } = authUser;
+      if (registeredUser.id === authUser.id) return err400Res(res, `${username} can not follow self`);
+      const authFollow = await queryOneOrNone(findFollow(), registeredUser.id);
       if (authFollow) return err400Res(res, dataFound('Following'));
       return next();
     } catch (error) {
@@ -25,9 +25,3 @@ export default class FollowAuth {
     }
   }
 }
-
-const singletonFollowAuth = new FollowAuth();
-
-export {
-  singletonFollowAuth,
-};

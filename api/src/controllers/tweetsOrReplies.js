@@ -22,10 +22,10 @@ class TweetAndReplyController {
   }
 
   async addTweet({ body: { tweet = '' } }, res) {
-    const { authUser } = singletonUserAuth;
-    const { id } = authUser;
-    const arrayData = tweetRequestData(tweet, id);
     try {
+      const { authUser } = singletonUserAuth;
+      const { id } = authUser;
+      const arrayData = tweetRequestData(tweet, id);
       this.newTweet = await queryOne(createTweet(), arrayData);
       return success201Res(res, tweetResponseData(this.newTweet));
     } catch (error) {
@@ -34,9 +34,9 @@ class TweetAndReplyController {
   }
 
   async addTweetReply({ body: { reply = '' }, params: { id = '' } }, res) {
-    const { authUser } = singletonUserAuth;
-    const arrayData = replyRequestData(reply, authUser.id, id);
     try {
+      const { authUser } = singletonUserAuth;
+      const arrayData = replyRequestData(reply, authUser.id, id);
       this.newReply = await queryOne(createTweetReply(), arrayData);
       const { tweet_id } = this.newReply;
       const newReply = replyResponseData(this.newReply);
@@ -48,9 +48,9 @@ class TweetAndReplyController {
   }
 
   async findTweetsByUserId(req, res) {
-    const { authUser } = singletonUserAuth;
-    const { id } = authUser;
     try {
+      const { authUser } = singletonUserAuth;
+      const { id } = authUser;
       this.tweetsByUserId = await queryAny(getTweetsByUserId(), id);
       return success200Res(res, tweetResponseArray(this.tweetsByUserId));
     } catch (error) {
