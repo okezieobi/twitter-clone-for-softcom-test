@@ -8,7 +8,7 @@ import { singletonUserAuth } from './users';
 const { err400Res } = new HttpResponse();
 const { findFollow } = Queries;
 const { queryOneOrNone } = database;
-const { dataFound } = templateErrors;
+const { dataFound, followSelf } = templateErrors;
 const { displayErrors } = Logger;
 
 export default class FollowAuth {
@@ -16,9 +16,9 @@ export default class FollowAuth {
     try {
       const { authUser, registeredUser } = singletonUserAuth;
       const { username } = authUser;
-      if (registeredUser.id === authUser.id) return err400Res(res, `${username} can not follow self`);
+      if (registeredUser.id === authUser.id) return err400Res(res, followSelf(username));
       const authFollow = await queryOneOrNone(findFollow(), registeredUser.id);
-      if (authFollow) return err400Res(res, dataFound('Following'));
+      if (authFollow) return err400Res(res, dataFound('Follow'));
       return next();
     } catch (error) {
       return displayErrors(error);

@@ -33,7 +33,7 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
   });
 
   it('Should get all tweets of user at "/api/v1/tweets" as an authenicated user with GET if all input fields are valid', async () => {
-    const token = generateToken('5050505050505');
+    const token = generateToken(5050505050505);
     const response = await chai.request(app).get('/api/v1/tweets').set('token', token);
     expect(response).to.have.status(200);
     expect(response.body).to.be.an('object');

@@ -39,4 +39,8 @@ export default class Errors {
   static notTweetOrReply(tweetOrReply) {
     return this.wrongCharLength(tweetOrReply, 280);
   }
+
+  static followSelf(title) {
+    return `${title} can not follow self`;
+  }
 }

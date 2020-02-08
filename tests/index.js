@@ -59,6 +59,7 @@ require('./users/signin');
 require('./tweetsOrReplies/createTweet');
 require('./tweetsOrReplies/getTweetsByUserId');
 require('./tweetsOrReplies/createTweetReply');
+require('./follows/createFollow');
 
 export {
   expect,

@@ -116,7 +116,7 @@ describe('Test endpoint at "/api/v1/auth/signin" to sign in a User with POST', (
     expect(response).to.have.status(404);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(404);
-    expect(response.body).to.have.property('error').to.be.a('string').to.equal('User does not exist, please sign up');
+    expect(response.body).to.have.property('error').to.be.a('string').to.equal('User does not exist, user should please sign up');
   });
 
   it('Should NOT sign in a User at "/api/v1/auth/signin" if user password is undefined or null or an empty string', async () => {

@@ -6,7 +6,7 @@ import Logger from '../helpers/logger';
 import Queries from '../queries/follows';
 import Models from '../models/follows';
 
-const { success200ResMessage } = new HttpResponse();
+const { success201ResMessage } = new HttpResponse();
 const { displayErrors } = Logger;
 const { createFollow, getFollows } = Queries;
 const { pool } = database;
@@ -25,7 +25,7 @@ class FollowController {
       const { id } = authUser;
       const { username } = registeredUser;
       await createFollow(pool, requestData(id, this.followId));
-      return success200ResMessage(res, `${username} successfully followed`);
+      return success201ResMessage(res, `${username} successfully followed`);
     } catch (error) {
       return displayErrors(error);
     }
