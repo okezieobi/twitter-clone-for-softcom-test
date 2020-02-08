@@ -1,10 +1,10 @@
 export default class Errors {
   static userNotExists() {
-    return 'User does not exist, please sign up';
+    return 'User does not exist, user should please sign up';
   }
 
   static userExists() {
-    return 'User exists, please sign in with email or username';
+    return 'User exists, user should please sign in with email or username';
   }
 
   static notEmail() {

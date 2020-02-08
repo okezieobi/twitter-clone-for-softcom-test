@@ -15,7 +15,7 @@ const { tokenIsRequired } = LiteralErrors;
 
 
 export default class UserValidator {
-  static verifySignup({ body: { fullName = '', email = '', username = '' } }, res, next) {
+  static validateNewUser({ body: { fullName = '', email = '', username = '' } }, res, next) {
     const fullNameErr = checkStringTypeRequest(fullName, 'Full name', validateVarChar);
     const emailErr = checkStringTypeRequest(email, 'Email', validateEmail);
     const usernameErr = checkStringTypeRequest(username, 'Username', validateVarChar);
@@ -30,7 +30,7 @@ export default class UserValidator {
     return resErr;
   }
 
-  static verifySignin({ body: { user = '' } }, res, next) {
+  static validateRegisteredUser({ body: { user = '' } }, res, next) {
     const userErr = checkStringTypeRequest(user, 'Email or username', validateVarChar);
     const resErr = userErr ? err400Res(res, userErr) : next();
     return resErr;

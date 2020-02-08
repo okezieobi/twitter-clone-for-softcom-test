@@ -4,7 +4,8 @@ export default class HttpResponse {
     this.err404Res = this.err404Res.bind(this);
     // this.err403Res = this.err403Res.bind(this);
     this.success200Res = this.success200Res.bind(this);
-    // this.success200ResMessage = this.success200ResMessage.bind(this);
+    this.success200ResMessage = this.success200ResMessage.bind(this);
+    this.success201ResMessage = this.success201ResMessage.bind(this);
     this.success201Res = this.success201Res.bind(this);
     this.auth201Res = this.auth201Res.bind(this);
     this.auth200Res = this.auth200Res.bind(this);
@@ -47,11 +48,13 @@ export default class HttpResponse {
     return this.constructor.response(res, 200, 'data', success200Data);
   }
 
-  /*
   success200ResMessage(res, success200Message) {
     return this.constructor.response(res, 200, 'message', success200Message);
   }
-  */
+
+  success201ResMessage(res, success201Message) {
+    return this.constructor.response(res, 201, 'message', success201Message);
+  }
 
   success201Res(res, success201Data) {
     return this.constructor.response(res, 201, 'data', success201Data);

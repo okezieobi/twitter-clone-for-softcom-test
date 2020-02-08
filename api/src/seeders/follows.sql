@@ -3,24 +3,24 @@ Connect to db as interviewprojects and RUN  \c softcomtwitterclone \i api/src/se
 */
 
 INSERT INTO "following"
-    ("user_id", "following_id")
+    (id, "user_id", "following_id")
 VALUES
-    (1010101010101, 5050505050505);
+    (1212121212121, 1010101010101, 5050505050505);
 
 INSERT INTO followers
-    ("user_id", "follower_id")
+    (id, "user_id", "follower_id")
 VALUES
-    (5050505050505, 1010101010101);
+    (1313131313131, 5050505050505, 1010101010101);
 
 INSERT INTO "following"
-    ("user_id", "following_id")
+    (id, "user_id", "following_id")
 VALUES
-    (5050505050505, 1010101010101);
+    (1414141414141, 5050505050505, 1010101010101);
 
 INSERT INTO followers
-    ("user_id", "follower_id")
+    (id, "user_id", "follower_id")
 VALUES
-    (1010101010101, 5050505050505);
+    (1515151515151, 1010101010101, 5050505050505);
 
 
 SELECT *
