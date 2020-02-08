@@ -13,3 +13,9 @@ CASCADE;
 
 TRUNCATE replies
 CASCADE;
+
+TRUNCATE "following"
+CASCADE;
+
+TRUNCATE followers
+CASCADE;
