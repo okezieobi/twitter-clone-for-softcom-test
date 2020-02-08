@@ -7,7 +7,7 @@ import TweetOrReplyAuth from '../auth/tweetsOrReplies';
 const { validateTweet, validateReply, validateTweetId } = TweetOrReplyValidator;
 const { validateToken } = UserValidator;
 const { authenticateAll, verifyToken } = singletonUserAuth;
-const { routeCallbacks } = MiddlewareHelper;
+const { routeCallbacks } = new MiddlewareHelper();
 const { authTweetById } = TweetOrReplyAuth;
 
 export default class TweetAndReplyMiddleware {

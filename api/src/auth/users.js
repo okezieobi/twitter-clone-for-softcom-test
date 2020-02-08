@@ -1,7 +1,6 @@
 import HttpResponse from '../helpers/response';
 import database from '../db/pgConnect';
 import literalErrors from '../errors/stringLiterals';
-import Logger from '../helpers/logger';
 import Jwt from '../helpers/jwt';
 import Queries from '../queries/users';
 import Bcrypt from '../helpers/bcrypt';
@@ -13,7 +12,6 @@ const {
   findUserWithEmailOrUsername, getUserByUsernameAndEmail, findUserById,
 } = Queries;
 const { queryOneOrNone } = database;
-const { displayErrors } = Logger;
 const { compare } = Bcrypt;
 const {
   userExists, userNotExists, wrongPassword, wrongToken,
@@ -31,34 +29,22 @@ export default class UserAuth {
   }
 
   static async findUserWithEmailOrUsername({ body: { username = '', email = '' } }, res, next) {
-    try {
-      const newUser = await queryOneOrNone(findUserWithEmailOrUsername(), [email, username]);
-      const signupNext = newUser ? err400Res(res, userExists()) : next();
-      return signupNext;
-    } catch (error) {
-      return displayErrors(error);
-    }
+    const newUser = await queryOneOrNone(findUserWithEmailOrUsername(), [email, username]);
+    const signupNext = newUser ? err400Res(res, userExists()) : next();
+    return signupNext;
   }
 
   async getUserByUsernameOrEmail({ body: { user = '' } }, res, next) {
-    try {
-      this.registeredUser = await queryOneOrNone(getUserByUsernameAndEmail(), [user]);
-      const resErr = this.registeredUser ? next() : err404Res(res, userNotExists());
-      return resErr;
-    } catch (error) {
-      return displayErrors(error);
-    }
+    this.registeredUser = await queryOneOrNone(getUserByUsernameAndEmail(), [user]);
+    const resErr = this.registeredUser ? next() : err404Res(res, userNotExists());
+    return resErr;
   }
 
   async verifyPassword({ body: { password = '' } }, res, next) {
-    try {
-      const { registeredUser } = this;
-      const verifyPassword = await compare(registeredUser.password, password);
-      const resErr = verifyPassword ? next() : err400Res(res, wrongPassword());
-      return resErr;
-    } catch (error) {
-      return displayErrors(error);
-    }
+    const { registeredUser } = this;
+    const verifyPassword = await compare(registeredUser.password, password);
+    const resErr = verifyPassword ? next() : err400Res(res, wrongPassword());
+    return resErr;
   }
 
   verifyToken({ headers: { token = '' } }, res, next) {
@@ -73,14 +59,10 @@ export default class UserAuth {
   }
 
   async authenticateAll(req, res, next) {
-    try {
-      const { userId } = this;
-      this.authUser = await queryOneOrNone(findUserById(), [userId]);
-      const resErr = this.authUser ? next() : err404Res(res, wrongToken());
-      return resErr;
-    } catch (error) {
-      return displayErrors(error);
-    }
+    const { userId } = this;
+    this.authUser = await queryOneOrNone(findUserById(), [userId]);
+    const resErr = this.authUser ? next() : err404Res(res, wrongToken());
+    return resErr;
   }
 }
 
