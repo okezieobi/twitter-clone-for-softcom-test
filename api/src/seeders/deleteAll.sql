@@ -2,20 +2,20 @@
 Connect to db as interviewprojects and RUN  \c softcomtwitterclone \i api/src/seeders/delete.sql
 */
 
-TRUNCATE users
-CASCADE;
-
-TRUNCATE tweets
+TRUNCATE replies
 CASCADE;
 
 TRUNCATE tweetreplies
 CASCADE;
 
-TRUNCATE replies
+TRUNCATE tweets
 CASCADE;
 
 TRUNCATE "following"
 CASCADE;
 
 TRUNCATE followers
+CASCADE;
+
+TRUNCATE users
 CASCADE;
