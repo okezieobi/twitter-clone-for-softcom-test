@@ -11,7 +11,7 @@ CREATE TABLE "following"
     "following_id" bigint NOT NULL UNIQUE REFERENCES users(id)
 );
 
-DROP TABLE IF EXISTS followers;
+DROP TABLE IF EXISTS followers CASCADE;
 
 CREATE TABLE followers
 (

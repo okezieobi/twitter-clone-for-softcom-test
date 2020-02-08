@@ -5,7 +5,7 @@ Connect to database as interviewprojects and RUN  \c softcomtwitterclone \i api/
 CREATE EXTENSION
 IF NOT EXISTS "pgcrypto";
 
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users
 (

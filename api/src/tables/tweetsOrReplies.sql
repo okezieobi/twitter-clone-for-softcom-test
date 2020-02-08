@@ -2,7 +2,7 @@
 Connect to database as interviewprojects and RUN  \c softcomtwitterclone \i api/src/tables/tweets.sql
 */
 
-DROP TABLE IF EXISTS tweets;
+DROP TABLE IF EXISTS tweets CASCADE;
 
 CREATE TABLE tweets
 (
