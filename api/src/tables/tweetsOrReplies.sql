@@ -12,7 +12,7 @@ CREATE TABLE tweets
     "user_id"  bigint       NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS tweetreplies;
+DROP TABLE IF EXISTS tweetreplies CASCADE;
 
 CREATE TABLE tweetreplies
 (
@@ -24,7 +24,7 @@ CREATE TABLE tweetreplies
 );
 
 
-DROP TABLE IF EXISTS replies;
+DROP TABLE IF EXISTS replies CASCADE;
 
 CREATE TABLE replies
 (

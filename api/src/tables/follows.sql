@@ -2,7 +2,7 @@
 Connect to database as interviewprojects and RUN  \c softcomtwitterclone \i api/src/tables/follows.sql
 */
 
-DROP TABLE IF EXISTS "following";
+DROP TABLE IF EXISTS "following" CASCADE;
 
 CREATE TABLE "following"
 (
