@@ -8,7 +8,7 @@ import Models from '../models/follows';
 const { success201ResMessage } = new HttpResponse();
 const { createFollow, getFollows } = Queries;
 const { pool } = database;
-const { requestData } = Models;
+const { prepareRequest } = Models;
 
 class FollowController {
   constructor() {
@@ -21,7 +21,7 @@ class FollowController {
     this.followId = registeredUser.id;
     const { id } = authUser;
     const { username } = registeredUser;
-    await createFollow(pool, requestData(id, this.followId));
+    await createFollow(pool, prepareRequest(id, this.followId));
     return success201ResMessage(res, `${username} successfully followed`);
   }
 

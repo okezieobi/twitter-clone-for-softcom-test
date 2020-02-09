@@ -123,7 +123,7 @@ describe('Test endpoint at "/api/v1/tweets/:id" to create a tweet reply as an au
     expect(response.body).to.have.property('error').to.be.a('string').to.equal('Token provided does not match any user');
   });
 
-  it('Should not create a tweet reply at "/api/v1/tweets" as an authenticated user with POST if token is not a positive integer', async () => {
+  it('Should not create a tweet reply at "/api/v1/tweets/:id" as an authenticated user with POST if token is not a positive integer', async () => {
     const testData = { reply: 'First Tweet' };
     const token = generateToken(returnRandomValue('-5050505050505', '-505.0505050505'));
     const tweetId = '3030303030303';

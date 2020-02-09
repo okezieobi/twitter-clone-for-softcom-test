@@ -3,7 +3,7 @@ import logLevel from 'loglevel';
 const { error, warn } = logLevel;
 
 export default class Logs {
-  static displayErrors(errorInfo) {
+  static logErrors(errorInfo) {
     return error(errorInfo);
   }
 

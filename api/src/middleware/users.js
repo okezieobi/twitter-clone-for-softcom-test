@@ -6,7 +6,7 @@ import followController from '../controllers/follows';
 const { validatePassword, validateNewUser, validateRegisteredUser } = UserValidator;
 const { findUserWithEmailOrUsername } = UserAuth;
 const { getUserByUsernameOrEmail, verifyPassword } = singletonUserAuth;
-const { routeCallbacks } = new MiddlewareHelper();
+const { routeCallbacks } = MiddlewareHelper;
 const { getFollows } = followController;
 
 export default class UserMiddleware {

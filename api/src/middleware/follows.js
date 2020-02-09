@@ -6,7 +6,7 @@ import FollowAuth from '../auth/follows';
 const { verifyFollow } = FollowAuth;
 const { validateToken, validateRegisteredUser } = UserValidator;
 const { authenticateAll, verifyToken, getUserByUsernameOrEmail } = singletonUserAuth;
-const { routeCallbacks } = new MiddlewareHelper();
+const { routeCallbacks } = MiddlewareHelper;
 
 export default class FollowMiddleware {
   static createFollow() {
