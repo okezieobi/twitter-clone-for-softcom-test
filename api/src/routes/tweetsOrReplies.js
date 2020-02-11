@@ -7,6 +7,6 @@ const { addTweetReply, addTweet, findTweetsByUserId } = tweetOrReplyController;
 
 router.post('/tweets', createTweet(), addTweet);
 router.get('/tweets', getTweets(), findTweetsByUserId);
-router.post('/tweets/:id', createTweetReply(), addTweetReply);
+router.post('/tweets/:id/replies', createTweetReply(), addTweetReply);
 
 export default router;

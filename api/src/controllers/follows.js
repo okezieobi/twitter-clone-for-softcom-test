@@ -19,16 +19,14 @@ class FollowController {
   async addFollow(req, res) {
     const { authUser, registeredUser } = singletonUserAuth;
     this.followId = registeredUser.id;
-    const { id } = authUser;
     const { username } = registeredUser;
-    await createFollow(pool, prepareRequest(id, this.followId));
+    await createFollow(pool, prepareRequest(authUser.id, this.followId));
     return success201ResMessage(res, `${username} successfully followed`);
   }
 
   async getFollows(req, res, next) {
     const { registeredUser } = singletonUserAuth;
-    const { id } = registeredUser;
-    this.retrievedFollows = await getFollows(pool, id);
+    this.retrievedFollows = await getFollows(pool, registeredUser.id);
     return next();
   }
 }

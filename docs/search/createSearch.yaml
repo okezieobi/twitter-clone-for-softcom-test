@@ -1,0 +1,26 @@
+paths:
+  /searches/:                # path of the user from your endpoint
+    post:                 # endpoint request type (post request)
+      tags:               # Tag property
+        - Search            # Value of the tag
+      summary: search tweets, replies and registered users as an authenticated user
+      security:
+       - ApiKeyAuth: []
+      requestBody:
+         required: true
+         content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/searches'
+      responses:          # server responses
+        201:
+          description: An object containing arrays of users, tweets and replies details
+components:        # Schema definition for request body
+ schemas:
+  searches:
+    type: object
+    properties:
+          search:
+            type: string
+    required:
+      - search

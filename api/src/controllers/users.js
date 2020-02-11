@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import database from '../db/pgConnect';
 import Token from '../helpers/jwt';
 import followController from './follows';
@@ -5,14 +6,12 @@ import HttpResponse from '../helpers/response';
 import Models from '../models/users';
 import UserQueries from '../queries/users';
 import { singletonUserAuth } from '../auth/users';
-import Logger from '../helpers/logger';
 
 const { auth200Res, auth201Res } = new HttpResponse();
 const { prepareRequest, prepareResponse } = Models;
 const { createClient } = UserQueries;
 const { generate } = Token;
 const { queryOne } = database;
-const { logErrors } = Logger;
 
 class UserController {
   constructor() {
@@ -22,12 +21,10 @@ class UserController {
 
   async addUser({ body }, res) {
     try {
-      const arrayData = prepareRequest(body);
-      this.newUser = await queryOne(createClient(), arrayData);
-      const { id } = this.newUser;
-      return auth201Res(res, prepareResponse(this.newUser), generate(id));
-    } catch (error) {
-      return logErrors(error);
+      this.newUser = await queryOne(createClient(), prepareRequest(body));
+      return auth201Res(res, prepareResponse(this.newUser), generate(this.newUser.id));
+    } catch (err) {
+      return console.error(err);
     }
   }
 
@@ -40,8 +37,8 @@ class UserController {
       registeredUser.followers = followers;
       this.authRes = auth200Res(res, prepareResponse(registeredUser), generate(registeredUser.id));
       return this.authRes;
-    } catch (error) {
-      return logErrors(error);
+    } catch (err) {
+      return console.error(err);
     }
   }
 }

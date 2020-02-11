@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import HttpResponse from '../helpers/response';
 import database from '../db/pgConnect';
 import literalErrors from '../errors/stringLiterals';
@@ -6,7 +7,6 @@ import Queries from '../queries/users';
 import Bcrypt from '../helpers/bcrypt';
 import Validator from '../helpers/validator';
 import TemplateErrors from '../errors/templateLiterals';
-import Logger from '../helpers/logger';
 
 const { err400Res, err404Res } = new HttpResponse();
 const {
@@ -20,7 +20,6 @@ const {
 const { verify } = Jwt;
 const { checkInteger } = Validator;
 const { notInteger } = TemplateErrors;
-const { logErrors } = Logger;
 
 export default class UserAuth {
   constructor() {
@@ -35,8 +34,8 @@ export default class UserAuth {
       const newUser = await queryOneOrNone(findUserWithEmailOrUsername(), [email, username]);
       const signupNext = newUser ? err400Res(res, userExists()) : next();
       return signupNext;
-    } catch (error) {
-      return logErrors(error);
+    } catch (err) {
+      return console.error(err);
     }
   }
 
@@ -45,8 +44,8 @@ export default class UserAuth {
       this.registeredUser = await queryOneOrNone(getUserByUsernameAndEmail(), [user]);
       const resErr = this.registeredUser ? next() : err404Res(res, userNotExists());
       return resErr;
-    } catch (error) {
-      return logErrors(error);
+    } catch (err) {
+      return console.error(err);
     }
   }
 
@@ -59,7 +58,7 @@ export default class UserAuth {
 
   verifyToken({ headers: { token = '' } }, res, next) {
     const { userId, message, name } = verify(token);
-    if (name || message) return err400Res(res, { name, message }); // jwt error
+    if (name || message) return err400Res(res, { name, message }); // jwt err
     const checkId = checkInteger(userId);
     if (checkId) {
       this.userId = userId;
@@ -74,8 +73,8 @@ export default class UserAuth {
       this.authUser = await queryOneOrNone(findUserById(), [userId]);
       const resErr = this.authUser ? next() : err404Res(res, wrongToken());
       return resErr;
-    } catch (error) {
-      return logErrors(error);
+    } catch (err) {
+      return console.error(err);
     }
   }
 }
