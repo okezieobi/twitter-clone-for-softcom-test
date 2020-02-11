@@ -5,17 +5,22 @@ const {
 } = validator;
 
 export default class Patterns {
+  static checkForString(data) {
+    this.checkStringResult = typeof data === 'string' ? data : String(data);
+    return this.checkStringResult;
+  }
+
   static validateEmail(email = '') {
-    return isEmail(typeof email === 'string' ? email : String(email))
-    && this.checkCharLength(email, 128);
+    return isEmail(Patterns.checkForString(email))
+    && this.checkCharLength(Patterns.checkForString(email), 128);
   }
 
   static validatePassword(password = '') {
-    return isLength(typeof password === 'string' ? password : String(password), { min: 8, max: 128 });
+    return isLength(Patterns.checkForString(password), { min: 8, max: 128 });
   }
 
   static checkCharLength(char = '', length = 0) {
-    return isLength(typeof char === 'string' ? char : String(char), { max: length });
+    return isLength(Patterns.checkForString(char), { max: length });
   }
 
   static checkVarChar(varChar = '') {
@@ -23,18 +28,18 @@ export default class Patterns {
   }
 
   /*
-  static checkNumber(number = '') {
+   checkNumber(number = '') {
     return isNumeric(number || String(number)) && parseInt(number || String(number), 10) >= 0;
   }
   */
 
   static checkInteger(integer = '') {
-    return isInt(typeof integer === 'string' ? integer : String(integer))
-    && parseInt(typeof integer === 'string' ? integer : String(integer), 10) >= 0;
+    return isInt(Patterns.checkForString(integer))
+    && parseInt(Patterns.checkForString(integer), 10) >= 0;
   }
 
   static checkJWT(jwt = '') {
-    return isJWT(typeof jwt === 'string' ? jwt : String(jwt));
+    return isJWT(Patterns.checkForString(jwt));
   }
 
   static checkTweetOrReply(tweetOrReply = '') {

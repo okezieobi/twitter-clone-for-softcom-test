@@ -1,18 +1,18 @@
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
 import database from '../db/pgConnect';
 import { singletonUserAuth } from '../auth/users';
 import HttpResponse from '../helpers/response';
 import Models from '../models/tweetsOrReplies';
-import Logger from '../helpers/logger';
 import Queries from '../queries/tweetsOrReplies';
 
 const { success201Res, success200Res } = new HttpResponse();
 const { createTweet, getTweetsByUserId, createTweetReply } = Queries;
 const {
-  tweetRequestData, tweetResponseData, tweetResponseArray, replyRequestData, replyResponseData,
+  prepareTweetRequest, prepareTweetResponse, prepareTweetResArray,
+  prepareReplyRequest, prepareReplyResponse,
 } = Models;
 const { queryOne, queryAny } = database;
-const { displayErrors } = Logger;
 
 class TweetAndReplyController {
   constructor() {
@@ -24,37 +24,34 @@ class TweetAndReplyController {
   async addTweet({ body: { tweet = '' } }, res) {
     try {
       const { authUser } = singletonUserAuth;
-      const { id } = authUser;
-      const arrayData = tweetRequestData(tweet, id);
-      this.newTweet = await queryOne(createTweet(), arrayData);
-      return success201Res(res, tweetResponseData(this.newTweet));
-    } catch (error) {
-      return displayErrors(error);
+      this.newTweet = await queryOne(createTweet(), prepareTweetRequest(tweet, authUser.id));
+      return success201Res(res, prepareTweetResponse(this.newTweet));
+    } catch (err) {
+      return console.error(err);
     }
   }
 
   async addTweetReply({ body: { reply = '' }, params: { id = '' } }, res) {
     try {
       const { authUser } = singletonUserAuth;
-      const arrayData = replyRequestData(reply, authUser.id, id);
+      const arrayData = prepareReplyRequest(reply, authUser.id, id);
       this.newReply = await queryOne(createTweetReply(), arrayData);
       const { tweet_id } = this.newReply;
-      const newReply = replyResponseData(this.newReply);
+      const newReply = prepareReplyResponse(this.newReply);
       newReply.tweetId = parseInt(tweet_id, 10);
       return success201Res(res, newReply);
-    } catch (error) {
-      return displayErrors(error);
+    } catch (err) {
+      return console.error(err);
     }
   }
 
   async findTweetsByUserId(req, res) {
     try {
       const { authUser } = singletonUserAuth;
-      const { id } = authUser;
-      this.tweetsByUserId = await queryAny(getTweetsByUserId(), id);
-      return success200Res(res, tweetResponseArray(this.tweetsByUserId));
-    } catch (error) {
-      return displayErrors(error);
+      this.tweetsByUserId = await queryAny(getTweetsByUserId(), authUser.id);
+      return success200Res(res, prepareTweetResArray(this.tweetsByUserId));
+    } catch (err) {
+      return console.error(err);
     }
   }
 }

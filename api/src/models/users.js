@@ -6,13 +6,13 @@ const { uniqueIds } = Numbers;
 const { hash } = Bcrypt;
 
 export default class UserModel {
-  static requestData({
+  static prepareRequest({
     fullName = '', email = '', password = '', username = '',
   }) {
     return [uniqueIds(), fullName, email, hash(password), username];
   }
 
-  static responseData({
+  static prepareResponse({
     id, full_name, username, email, type, created_on, followers = [], followings = [],
   }) {
     return {

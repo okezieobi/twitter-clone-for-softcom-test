@@ -60,6 +60,7 @@ require('./tweetsOrReplies/createTweet');
 require('./tweetsOrReplies/getTweetsByUserId');
 require('./tweetsOrReplies/createTweetReply');
 require('./follows/createFollow');
+require('./search/createSearch');
 
 export {
   expect,

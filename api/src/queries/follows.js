@@ -1,7 +1,4 @@
-import Logger from '../helpers/logger';
-
-const { displayErrors } = Logger;
-
+/* eslint-disable no-console */
 export default class Follows {
   static getFollowings() {
     return 'SELECT * FROM "following" WHERE "user_id" = $1';
@@ -24,30 +21,30 @@ export default class Follows {
   }
 
   static async createFollow(db, followArrayData) {
-    try {
-      const { task } = db;
-      await task('makeFollow', async (t) => {
+    const { task } = db;
+    await task('makeFollow', async (t) => {
+      try {
         const { none } = t;
         await none(Follows.addFollow(), followArrayData);
         await none(Follows.createFollower(), followArrayData);
-      });
-    } catch (error) {
-      throw displayErrors(error);
-    }
+      } catch (err) {
+        console.error(err);
+      }
+    });
   }
 
   static async getFollows(db, userId) {
-    try {
-      const { task } = db;
-      const findFollows = await task('retrieveFollows', async (t) => {
+    const { task } = db;
+    const findFollows = await task('retrieveFollows', async (t) => {
+      try {
         const { any } = t;
         const followings = await any(Follows.getFollowings(), [userId]);
         const followers = await any(Follows.getFollowers(), [userId]);
         return { followings, followers };
-      });
-      return findFollows;
-    } catch (error) {
-      return displayErrors(error);
-    }
+      } catch (err) {
+        return console.error(err);
+      }
+    });
+    return findFollows;
   }
 }

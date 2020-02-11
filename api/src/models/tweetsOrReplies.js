@@ -6,11 +6,11 @@ const { uniqueIds } = Numbers;
 const { handleArrayData } = SharedModel;
 
 export default class TweetOrReplyModels {
-  static tweetRequestData(tweet = '', userId = 0) {
+  static prepareTweetRequest(tweet = '', userId = 0) {
     return [uniqueIds(), tweet, userId];
   }
 
-  static tweetResponseData({ tweet, id, created_on }) {
+  static prepareTweetResponse({ tweet, id, created_on }) {
     return {
       id: parseInt(id, 10),
       tweet: String(tweet),
@@ -18,11 +18,11 @@ export default class TweetOrReplyModels {
     };
   }
 
-  static replyRequestData(reply = '', userId = 0, tweetOrReplyId = 0) {
+  static prepareReplyRequest(reply = '', userId = 0, tweetOrReplyId = 0) {
     return [uniqueIds(), reply, userId, tweetOrReplyId];
   }
 
-  static replyResponseData({
+  static prepareReplyResponse({
     id, reply, user_id, created_on,
   }) {
     return {
@@ -33,7 +33,7 @@ export default class TweetOrReplyModels {
     };
   }
 
-  static tweetResponseArray(array) {
-    return handleArrayData(array, TweetOrReplyModels.tweetResponseData);
+  static prepareTweetResArray(array) {
+    return handleArrayData(array, TweetOrReplyModels.prepareTweetResponse);
   }
 }
