@@ -18,11 +18,11 @@ class SearchAuth {
   async getSearches({ body: { search = '' } }, res, next) {
     const searchResults = await searchAll(pool, prepareRequest(search));
     const { userRes, tweetRes, replyRes } = prepareResponse(searchResults);
-    if (userRes.length === 0 && tweetRes.length === 0 && replyRes.length === 0) {
-      return err404Res(res, noSearchResults(search));
+    if (userRes.length !== 0 || tweetRes.length !== 0 || replyRes.length !== 0) {
+      this.searches = { userRes, tweetRes, replyRes };
+      return next();
     }
-    this.searches = { userRes, tweetRes, replyRes };
-    return next();
+    return err404Res(res, noSearchResults(search));
   }
 }
 
