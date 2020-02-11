@@ -65,10 +65,9 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
     const { replyRes } = response.body.data;
     const randomReplyResIndex = getRandomArrayIndex(replyRes);
     if (replyRes.length > 0) {
-      expect(response.body.data[randomReplyResIndex]).to.have.property('id').to.be.a('number');
-      expect(response.body.data[randomReplyResIndex]).to.have.property('reply').to.be.a('string');
-      expect(response.body.data[randomReplyResIndex]).to.have.property('createdOn').to.be.a('string');
-      expect(response.body.data[randomReplyResIndex]).to.have.property('tweetId').to.be.a('number');
+      expect(response.body.data.replyRes[randomReplyResIndex]).to.have.property('id').to.be.a('number');
+      expect(response.body.data.replyRes[randomReplyResIndex]).to.have.property('reply').to.be.a('string');
+      expect(response.body.data.replyRes[randomReplyResIndex]).to.have.property('createdOn').to.be.a('string');
     }
   });
 

@@ -9,10 +9,10 @@ export default class SearchModels {
     return `${data}%`;
   }
 
-  static prepareResponse({ userSearch = [], tweetSearch = [], replySearch = [] }) {
+  static prepareResponse({ userSearch = [], tweetSearch = [], tweetReplySearch = [] }) {
     const userRes = userSearch.map((user) => prepareUserRes(user));
     const tweetRes = tweetSearch.map((tweet) => prepareTweetResponse(tweet));
-    const replyRes = replySearch.map((reply) => prepareReplyResponse(reply));
+    const replyRes = tweetReplySearch.map((reply) => prepareReplyResponse(reply));
     return { userRes, tweetRes, replyRes };
   }
 }

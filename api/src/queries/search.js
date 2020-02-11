@@ -20,15 +20,15 @@ export default class Search {
       try {
         const { any } = t;
         const userSearch = await any(Search.searchUsers(), searchData);
-        userSearch.forEach(async (user) => {
-          if (user) {
+        if (userSearch.length > 0) {
+          userSearch.forEach(async (user) => {
             const followings = await any(FollowQueries.getFollowings(), user.id);
             const followers = await any(FollowQueries.getFollowers(), user.id);
             const eachUser = user;
             eachUser.followings = followings;
             eachUser.followers = followers;
-          }
-        });
+          });
+        }
         const tweetSearch = await any(Search.searchTweets(), searchData);
         const tweetReplySearch = await any(Search.searchTweetReplies(), searchData);
         return { userSearch, tweetSearch, tweetReplySearch };
