@@ -83,7 +83,7 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
     expect(response.body).to.have.property('error').to.be.a('string').to.equal('Token provided does not match any user');
   });
 
-  it('Should not get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if token is not a positive integer', async () => {
+  it('Should not get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if id from token is not a positive integer', async () => {
     const token = generateToken(returnRandomValue('-5050505050505', '-505.0505050505'));
     const response = await chai.request(app).get('/api/v1/tweets').set('token', token);
     expect(response).to.have.status(400);

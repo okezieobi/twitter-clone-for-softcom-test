@@ -2,9 +2,9 @@ import SearchController from '../controllers/search';
 import SearchMiddleware from '../middleware/search';
 import router from './router';
 
-const { getSearches } = new SearchController();
+const { sendResponse } = SearchController;
 const { createSearch } = SearchMiddleware;
 
-router.post('/searches', createSearch(), getSearches);
+router.post('/searches', createSearch(), sendResponse);
 
 export default router;

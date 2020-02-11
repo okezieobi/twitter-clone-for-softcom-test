@@ -36,6 +36,10 @@ export default class Errors {
     return `${title} must be string data type`;
   }
 
+  static noSearchResults(title) {
+    return `No search results for ${title}`;
+  }
+
   static notTweetOrReply(tweetOrReply) {
     return this.wrongCharLength(tweetOrReply, 280);
   }

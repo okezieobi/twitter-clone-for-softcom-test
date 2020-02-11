@@ -1,20 +1,18 @@
-import database from '../db/pgConnect';
 import HttpResponse from '../helpers/response';
-import Queries from '../queries/search';
-import Models from '../models/search';
+import authSearches from '../auth/search';
 
-const { success201Res } = new HttpResponse();
-const { searchAll } = Queries;
-const { pool } = database;
-const { prepareRequest, prepareResponse } = Models;
+const { success200Res } = new HttpResponse();
 
-export default class Search {
+class SearchController {
   constructor() {
-    this.getSearches = this.getSearches.bind(this);
+    this.sendResponse = this.sendResponse.bind(this);
   }
 
-  async getSearches({ body: { search = '' } }, res) {
-    this.searches = await searchAll(pool, prepareRequest(search));
-    return success201Res(res, prepareResponse(this.searches));
+  async sendResponse(req, res) {
+    const { searches } = authSearches;
+    this.resData = searches;
+    return success200Res(res, this.resData);
   }
 }
+
+export default new SearchController();
