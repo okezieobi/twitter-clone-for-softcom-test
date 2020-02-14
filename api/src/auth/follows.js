@@ -13,9 +13,8 @@ const { dataFound, followSelf } = templateErrors;
 export default class FollowAuth {
   static async verifyFollow(req, res, next) {
     try {
-      const { authUser, registeredUser } = singletonUserAuth;
-      const { username } = authUser;
-      if (registeredUser.id === authUser.id) return err400Res(res, followSelf(username));
+      const { authUser: { username, id }, registeredUser } = singletonUserAuth;
+      if (registeredUser.id === id) return err400Res(res, followSelf(username));
       const authFollow = await queryOneOrNone(findFollow(), registeredUser.id);
       if (authFollow) return err400Res(res, dataFound('Follow'));
       return next();

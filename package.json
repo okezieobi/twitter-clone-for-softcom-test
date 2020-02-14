@@ -51,6 +51,7 @@
     "express": "",
     "jsonwebtoken": "",
     "moment": "",
+    "mongodb": "^3.5.3",
     "pg-promise": "",
     "regenerator-runtime": "",
     "swagger-jsdoc": "",

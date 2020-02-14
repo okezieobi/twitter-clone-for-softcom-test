@@ -23,8 +23,8 @@ class TweetAndReplyController {
 
   async addTweet({ body: { tweet = '' } }, res) {
     try {
-      const { authUser } = singletonUserAuth;
-      this.newTweet = await queryOne(createTweet(), prepareTweetRequest(tweet, authUser.id));
+      const { authUser: { id } } = singletonUserAuth;
+      this.newTweet = await queryOne(createTweet(), prepareTweetRequest(tweet, id));
       return success201Res(res, prepareTweetResponse(this.newTweet));
     } catch (err) {
       return console.error(err);
@@ -47,8 +47,8 @@ class TweetAndReplyController {
 
   async findTweetsByUserId(req, res) {
     try {
-      const { authUser } = singletonUserAuth;
-      this.tweetsByUserId = await queryAny(getTweetsByUserId(), authUser.id);
+      const { authUser: { id } } = singletonUserAuth;
+      this.tweetsByUserId = await queryAny(getTweetsByUserId(), id);
       return success200Res(res, prepareTweetResArray(this.tweetsByUserId));
     } catch (err) {
       return console.error(err);

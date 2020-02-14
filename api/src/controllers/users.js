@@ -30,8 +30,7 @@ class UserController {
 
   sendAuthRes(req, res) {
     try {
-      const { retrievedFollows } = followController;
-      const { followers, followings } = retrievedFollows;
+      const { retrievedFollows: { followers, followings } } = followController;
       const { registeredUser } = singletonUserAuth;
       registeredUser.followings = followings;
       registeredUser.followers = followers;
