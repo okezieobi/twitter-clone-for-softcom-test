@@ -1,86 +1,64 @@
 /* eslint-disable no-console */
-import HttpResponse from '../helpers/response';
-import database from '../db/pgConnect';
+import HttpResponse from '../utils/response';
 import literalErrors from '../errors/stringLiterals';
-import Jwt from '../helpers/jwt';
-import Queries from '../queries/users';
-import Bcrypt from '../helpers/bcrypt';
-import Validator from '../helpers/validator';
-import TemplateErrors from '../errors/templateLiterals';
+import UserHelper from '../helpers/users';
+import Jwt from '../utils/jwt';
+import Bcrypt from '../utils/bcrypt';
+import Validator from '../utils/validator';
 
 const { err400Res, err404Res } = new HttpResponse();
-const {
-  findUserWithEmailOrUsername, getUserByUsernameAndEmail, findUserById,
-} = Queries;
-const { queryOneOrNone } = database;
 const { compare } = Bcrypt;
 const {
-  userExists, userNotExists, wrongPassword, wrongToken,
+  userExists, userNotExists, wrongPassword, wrongToken, notObjectId,
 } = literalErrors;
 const { verify } = Jwt;
-const { checkInteger } = Validator;
-const { notInteger } = TemplateErrors;
+const { checkObjectId } = Validator;
+const { findUserByEmailAndUsername, findUserById, getUserByUsernameOrEmail } = UserHelper;
 
 export default class UserAuth {
-  constructor() {
-    this.verifyPassword = this.verifyPassword.bind(this);
-    this.getUserByUsernameOrEmail = this.getUserByUsernameOrEmail.bind(this);
-    this.authenticateAll = this.authenticateAll.bind(this);
-    this.verifyToken = this.verifyToken.bind(this);
-  }
-
   static async findUserWithEmailOrUsername({ body: { username = '', email = '' } }, res, next) {
-    try {
-      const newUser = await queryOneOrNone(findUserWithEmailOrUsername(), [email, username]);
-      const signupNext = newUser ? err400Res(res, userExists()) : next();
-      return signupNext;
-    } catch (err) {
-      return console.error(err);
-    }
+    const { newUser, name, message } = await findUserByEmailAndUsername({ username, email });
+    if (name || message) return console.log({ name, message });
+    const signupNext = newUser ? err400Res(res, userExists()) : next();
+    return signupNext;
   }
 
-  async getUserByUsernameOrEmail({ body: { user = '' } }, res, next) {
-    try {
-      this.registeredUser = await queryOneOrNone(getUserByUsernameAndEmail(), [user]);
-      const resErr = this.registeredUser ? next() : err404Res(res, userNotExists());
-      return resErr;
-    } catch (err) {
-      return console.error(err);
+  static async getUserByUsernameOrEmail({ body: { user = '' } }, res, next) {
+    const { registeredUser, name, message } = await getUserByUsernameOrEmail({ user });
+    if (name || message) return console.error({ name, message });
+    if (registeredUser) {
+      res.locals.registeredUser = registeredUser;
+      return next();
     }
+    return err404Res(res, userNotExists());
   }
 
-  verifyPassword({ body: { password = '' } }, res, next) {
-    const { registeredUser } = this;
+  static verifyPassword({ body: { password = '' } }, res, next) {
+    const { locals: { registeredUser } } = res;
     const verifyPassword = compare(registeredUser.password, password);
     const resErr = verifyPassword ? next() : err400Res(res, wrongPassword());
     return resErr;
   }
 
-  verifyToken({ headers: { token = '' } }, res, next) {
+  static verifyToken({ headers: { token = '' } }, res, next) {
     const { userId, message, name } = verify(token);
-    if (name || message) return err400Res(res, { name, message }); // jwt err
-    const checkId = checkInteger(userId);
+    if (name || message) return console.error({ name, message }); // jwt err
+    const checkId = checkObjectId(userId);
     if (checkId) {
-      this.userId = userId;
+      res.locals.userId = userId;
       return next();
     }
-    return err400Res(res, notInteger('Id from token'));
+    return err400Res(res, notObjectId());
   }
 
-  async authenticateAll(req, res, next) {
-    try {
-      const { userId } = this;
-      this.authUser = await queryOneOrNone(findUserById(), [userId]);
-      const resErr = this.authUser ? next() : err404Res(res, wrongToken());
-      return resErr;
-    } catch (err) {
-      return console.error(err);
+  static async authenticateAll(req, res, next) {
+    const { locals: { userId } } = res;
+    const { authUser, name, message } = await findUserById({ userId });
+    if (name || message) return console.error({ name, message });
+    if (authUser) {
+      res.locals.authUser = authUser;
+      return next();
     }
+    return err404Res(res, wrongToken());
   }
 }
-
-const singletonUserAuth = new UserAuth();
-
-export {
-  singletonUserAuth,
-};

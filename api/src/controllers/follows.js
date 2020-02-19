@@ -1,21 +1,15 @@
+/* eslint-disable no-console */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
-import database from '../db/pgConnect';
-import { singletonUserAuth } from '../auth/users';
-import HttpResponse from '../helpers/response';
-import Queries from '../queries/follows';
-import Models from '../models/follows';
+import HttpResponse from '../utils/response';
+import FollowHelper from '../helpers/follows';
 
 const { success201ResMessage } = new HttpResponse();
-const { createFollow, getFollows } = Queries;
-const { pool } = database;
-const { prepareRequest } = Models;
+const { getFollowings, getFollowers } = FollowHelper;
 
-class FollowController {
-  constructor() {
-    this.addFollow = this.addFollow.bind(this);
-    this.getFollows = this.getFollows.bind(this);
-  }
 
+export default class FollowController {
+  /*
   async addFollow(req, res) {
     const { authUser, registeredUser } = singletonUserAuth;
     this.followId = registeredUser.id;
@@ -23,12 +17,20 @@ class FollowController {
     await createFollow(pool, prepareRequest(authUser.id, this.followId));
     return success201ResMessage(res, `${username} successfully followed`);
   }
+  */
 
-  async getFollows(req, res, next) {
-    const { registeredUser } = singletonUserAuth;
-    this.retrievedFollows = await getFollows(pool, registeredUser.id);
-    return next();
+  static async findFollows(req, res, next) {
+    const { locals: { registeredUser } } = res;
+    const userFollowings = await getFollowings(registeredUser._id);
+    const userFollowers = await getFollowers(registeredUser._id);
+    if (userFollowings.name || userFollowings.message) console.error(userFollowings);
+    else if (userFollowers.name || userFollowers.message) console.error(userFollowers);
+    else {
+      const { followings } = userFollowers;
+      const { followers } = userFollowers;
+      res.locals.followers = followers;
+      res.locals.followings = followings;
+      next();
+    }
   }
 }
-
-export default new FollowController();

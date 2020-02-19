@@ -105,3 +105,4 @@ dist
 
 node_modules
 api/src/db/role.sql
+api/src/db/role.js

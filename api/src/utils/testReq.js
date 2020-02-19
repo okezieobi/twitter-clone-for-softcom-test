@@ -49,6 +49,10 @@ export default class Requests {
     return this.constructor.validateWithTests(jwt, 'checkJWT', 'notJWT');
   }
 
+  validateObjectId(id) {
+    return this.contructor.validateWithTests(id, 'checkObjectId', 'notObjectId');
+  }
+
   validateVarChar(chars, charTitle) {
     return this.constructor.validateWithTests(chars, 'checkVarChar', 'notVarChar', charTitle);
   }

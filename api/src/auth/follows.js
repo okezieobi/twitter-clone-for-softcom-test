@@ -1,25 +1,23 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
-import HttpResponse from '../helpers/response';
-import database from '../db/pgConnect';
+import HttpResponse from '../utils/response';
 import templateErrors from '../errors/templateLiterals';
-import Queries from '../queries/follows';
-import { singletonUserAuth } from './users';
+import FollowHelper from '../helpers/follows';
 
 const { err400Res } = new HttpResponse();
-const { findFollow } = Queries;
-const { queryOneOrNone } = database;
+const { getFollowings } = FollowHelper;
 const { dataFound, followSelf } = templateErrors;
 
 export default class FollowAuth {
   static async verifyFollow(req, res, next) {
     try {
-      const { authUser: { username, id }, registeredUser } = singletonUserAuth;
-      if (registeredUser.id === id) return err400Res(res, followSelf(username));
-      const authFollow = await queryOneOrNone(findFollow(), registeredUser.id);
+      const { locals: { authUser: { username, _id }, registeredUser } } = res;
+      if (registeredUser._id === _id) return err400Res(res, followSelf(username));
+      const authFollow = await getFollowings(registeredUser._id);
       if (authFollow) return err400Res(res, dataFound('Follow'));
       return next();
     } catch (err) {
-      return console.error(err);
+      return console.log(err);
     }
   }
 }

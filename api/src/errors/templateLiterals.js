@@ -1,4 +1,8 @@
 export default class Errors {
+  static throwError(error) {
+    throw error;
+  }
+
   static isRequired(title) {
     return `${title} is required`;
   }

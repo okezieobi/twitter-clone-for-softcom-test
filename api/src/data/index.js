@@ -1,4 +1,4 @@
-import TestRequest from '../helpers/testReq';
+import TestRequest from '../utils/testReq';
 
 const { getFalseValue, validateRequestStringType } = TestRequest;
 

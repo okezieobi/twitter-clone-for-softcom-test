@@ -1,29 +1,37 @@
-/* eslint-disable camelcase */
-import Numbers from '../helpers/uniqueNos';
-import Bcrypt from '../helpers/bcrypt';
+import { Schema, model } from 'mongoose';
+import { DateTime } from 'luxon';
 
-const { uniqueIds } = Numbers;
-const { hash } = Bcrypt;
+const userSchema = new Schema({
+  fullName: {
+    type: String,
+    required: true,
+    length: 128,
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    length: 128,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    length: 128,
+  },
+  hashedPassword: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ['Client', 'Admin'],
+    default: 'Client',
+  },
+  createdOn: {
+    type: Date,
+    default: DateTime.local(),
+  },
+});
 
-export default class UserModel {
-  static prepareRequest({
-    fullName = '', email = '', password = '', username = '',
-  }) {
-    return [uniqueIds(), fullName, email, hash(password), username];
-  }
-
-  static prepareResponse({
-    id, full_name, username, email, type, created_on, followers = [], followings = [],
-  }) {
-    return {
-      id: parseInt(id, 10),
-      fullName: String(full_name),
-      username: String(username),
-      email: String(email),
-      type: String(type),
-      createdOn: Date(created_on),
-      followers: followers.length,
-      followings: followings.length,
-    };
-  }
-}
+export default model('User', userSchema);

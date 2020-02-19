@@ -1,5 +1,5 @@
-import HttpResponse from '../helpers/response';
-import TestRequest from '../helpers/testReq';
+import HttpResponse from '../utils/response';
+import TestRequest from '../utils/testReq';
 import IndexValidator from './index';
 import LiteralErrors from '../errors/stringLiterals';
 
