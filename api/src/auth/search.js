@@ -30,8 +30,7 @@ export default class SearchAuth {
 
   static async checkSearchResult({ body: { search = '' } }, res, next) {
     const { locals: { userSearchRes, tweetSearchRes, tweetReplySearchRes } } = res;
-    if (userSearchRes.length !== 0 || tweetSearchRes.length !== 0
-      || tweetReplySearchRes.length !== 0) {
+    if (userSearchRes.length > 0 || tweetSearchRes.length > 0 || tweetReplySearchRes.length > 0) {
       next();
     } else {
       err404Res(res, noSearchResults(search));

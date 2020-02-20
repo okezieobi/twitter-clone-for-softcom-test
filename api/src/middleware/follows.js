@@ -1,5 +1,5 @@
 import UserAuth from '../auth/users';
-import UserValidator from '../data/users';
+import UserValidator from '../rules/users';
 import MiddlewareHelper from './middleware';
 import FollowAuth from '../auth/follows';
 

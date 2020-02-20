@@ -1,10 +1,9 @@
 import validator from 'validator';
-import { isValidObjectId, Schema } from 'mongoose';
+import { isValidObjectId } from 'mongoose';
 
 const {
   isEmail, isInt, isLength, isJWT,
 } = validator;
-const { Types: { ObjectId } } = Schema;
 
 export default class Patterns {
   static checkForString(data) {
@@ -44,8 +43,8 @@ export default class Patterns {
     return isJWT(Patterns.checkForString(jwt));
   }
 
-  static checkObjectId(id) {
-    return !!(String(new ObjectId(id)) === id && isValidObjectId(id));
+  static checkObjectId(id = '') {
+    return isValidObjectId(Patterns.checkForString(id));
   }
 
   static checkTweetOrReply(tweetOrReply = '') {

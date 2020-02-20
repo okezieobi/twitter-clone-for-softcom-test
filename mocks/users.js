@@ -1,4 +1,4 @@
-import bcrypt from '../../api/src/utils/bcrypt';
+import bcrypt from '../api/src/utils/bcrypt';
 
 const { hash } = bcrypt;
 

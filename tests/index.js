@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import chai, {
@@ -7,9 +6,12 @@ import chai, {
 import chaiHttp from 'chai-http';
 import app from '../api/src';
 import userModel from '../api/src/models/users';
+import TemplateErrors from '../api/src/errors/templateLiterals';
 import { tweetModel, tweetReplyModel } from '../api/src/models/tweetOrReplies';
-import { userSeeds, tweetReplySeeds, tweetSeeds } from './seeders/index';
+import { userSeeds, tweetReplySeeds, tweetSeeds } from '../mocks';
 import token from '../api/src/utils/jwt';
+
+const { consoleError } = TemplateErrors;
 
 class Test {
   static async deleteData() {
@@ -18,7 +20,7 @@ class Test {
       await tweetModel.deleteMany();
       await userModel.deleteMany();
     } catch (error) {
-      console.error();
+      consoleError();
     }
   }
 
@@ -26,7 +28,7 @@ class Test {
     try {
       await userModel.create(userSeeds);
     } catch (error) {
-      console.error(error);
+      consoleError(error);
     }
   }
 
@@ -34,7 +36,7 @@ class Test {
     try {
       await tweetModel.create(tweetSeeds);
     } catch (error) {
-      console.error(error);
+      consoleError(error);
     }
   }
 
@@ -42,7 +44,7 @@ class Test {
     try {
       tweetReplyModel.create(tweetReplySeeds);
     } catch (error) {
-      console.error(error);
+      consoleError(error);
     }
   }
 
@@ -75,8 +77,8 @@ class Test {
 
 require('./users/signup');
 require('./users/signin');
-/*
 require('./tweetsOrReplies/createTweet');
+/*
 require('./tweetsOrReplies/getTweetsByUserId');
 require('./tweetsOrReplies/createTweetReply');
 require('./follows/createFollow');

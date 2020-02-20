@@ -1,7 +1,7 @@
 import UserAuth from '../auth/users';
-import UserValidator from '../data/users';
+import UserValidator from '../rules/users';
 import MiddlewareHelper from './middleware';
-import SearchValidator from '../data/search';
+import SearchValidator from '../rules/search';
 import SearchAuth from '../auth/search';
 
 const { validateToken } = UserValidator;
