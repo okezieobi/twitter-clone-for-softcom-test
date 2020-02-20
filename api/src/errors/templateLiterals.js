@@ -1,6 +1,12 @@
+const { error, warn } = console;
+
 export default class Errors {
-  static throwError(error) {
-    throw error;
+  static consoleWarn(err) {
+    return warn(err);
+  }
+
+  static consoleError(err) {
+    return error(err);
   }
 
   static isRequired(title) {

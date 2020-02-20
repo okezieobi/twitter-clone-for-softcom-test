@@ -13,7 +13,7 @@ export default class FollowHelper {
 
   static async findFollow(followId = '') {
     try {
-      const follow = await followingModel.findOne({ followId });
+      const follow = await followingModel.findOne({ followingId: followId });
       return { follow };
     } catch (error) {
       return error;

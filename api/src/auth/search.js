@@ -1,16 +1,15 @@
-/* eslint-disable no-console */
 import HttpResponse from '../utils/response';
 import SearchHelper from '../helpers/search';
 import TemplateErrors from '../errors/templateLiterals';
 
 const { err404Res } = new HttpResponse();
 const { searchUsers, searchTweetsOrReplies } = SearchHelper;
-const { noSearchResults } = TemplateErrors;
+const { noSearchResults, consoleError } = TemplateErrors;
 
 export default class SearchAuth {
   static async getUserSearch({ body: { search = '' } }, res, next) {
     const { userSearchRes, name, message } = await searchUsers(search);
-    if (name || message) console.log({ name, message });
+    if (name || message) consoleError({ name, message });
     else {
       res.locals.userSearchRes = userSearchRes;
       next();
@@ -21,7 +20,7 @@ export default class SearchAuth {
     const {
       tweetSearchRes, tweetReplySearchRes, name, message,
     } = await searchTweetsOrReplies(search);
-    if (name || message) console.log({ name, message });
+    if (name || message) consoleError({ name, message });
     else {
       res.locals.tweetSearchRes = tweetSearchRes;
       res.locals.tweetReplySearchRes = tweetReplySearchRes;

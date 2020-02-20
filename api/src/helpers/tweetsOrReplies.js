@@ -50,8 +50,8 @@ export default class TweetOrReplyHelper {
 
   static async findTweetById(_id) {
     try {
-      const geTweet = await tweetModel.findById({ _id });
-      return { geTweet };
+      const getTweet = await tweetModel.findById({ _id });
+      return { getTweet };
     } catch (error) {
       return error;
     }

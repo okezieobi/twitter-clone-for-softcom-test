@@ -1,20 +1,16 @@
-/* eslint-disable no-console */
 import HttpResponse from '../utils/response';
 import TemplateErrors from '../errors/templateLiterals';
 import TweetOrReplyHelper from '../helpers/tweetsOrReplies';
 
 const { err404Res } = new HttpResponse();
-const { dataNotFound } = TemplateErrors;
+const { dataNotFound, consoleError } = TemplateErrors;
 const { findTweetById } = TweetOrReplyHelper;
 
 export default class TweetOrReplyAuth {
   static async authTweetById({ params: { id = '' } }, res, next) {
-    try {
-      const getTweetById = await findTweetById(id);
-      const resErr = getTweetById ? next() : err404Res(res, dataNotFound('Tweet'));
-      return resErr;
-    } catch (err) {
-      return console.error(err);
-    }
+    const { getTweet, name, message } = await findTweetById(id);
+    if (name || message) return consoleError({ name, message });
+    const resErr = getTweet ? next() : err404Res(res, dataNotFound('Tweet'));
+    return resErr;
   }
 }
