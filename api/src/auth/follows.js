@@ -1,12 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
 import HttpResponse from '../utils/response';
-import templateErrors from '../errors/templateLiterals';
+import TemplateErrors from '../errors/templateLiterals';
 import FollowHelper from '../helpers/follows';
 
 const { err400Res } = new HttpResponse();
 const { getFollowings } = FollowHelper;
-const { dataFound, followSelf } = templateErrors;
+const { dataFound, followSelf } = TemplateErrors;
 
 export default class FollowAuth {
   static async verifyFollow(req, res, next) {

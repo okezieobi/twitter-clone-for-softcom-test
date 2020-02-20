@@ -8,7 +8,7 @@ import chaiHttp from 'chai-http';
 import app from '../api/src';
 import userModel from '../api/src/models/users';
 import { tweetModel, tweetReplyModel } from '../api/src/models/tweetOrReplies';
-import { userSeeds, tweetReplySeeds, tweetSeeds } from '../api/src/seeders';
+import { userSeeds, tweetReplySeeds, tweetSeeds } from './seeders/index';
 import token from '../api/src/utils/jwt';
 
 class Test {
@@ -74,8 +74,8 @@ class Test {
 }
 
 require('./users/signup');
-/*
 require('./users/signin');
+/*
 require('./tweetsOrReplies/createTweet');
 require('./tweetsOrReplies/getTweetsByUserId');
 require('./tweetsOrReplies/createTweetReply');

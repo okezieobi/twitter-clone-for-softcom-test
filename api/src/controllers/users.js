@@ -16,9 +16,7 @@ export default class UserController {
   }
 
   static sendAuthRes(req, res) {
-    const { locals: { registeredUser, followers, followings } } = res;
-    registeredUser.followings = followings;
-    registeredUser.followers = followers;
+    const { locals: { registeredUser } } = res;
     return auth200Res(res, prepareResponse(registeredUser), generate(registeredUser._id));
   }
 }

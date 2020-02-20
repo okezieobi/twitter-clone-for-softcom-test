@@ -1,9 +1,9 @@
-import userController from '../controllers/users';
+import UserController from '../controllers/users';
 import router from './router';
 import UserMiddleware from '../middleware/users';
 import MiddlewareHelper from '../middleware/middleware';
 
-const { addUser, sendAuthRes } = userController;
+const { addUser, sendAuthRes } = UserController;
 const { signup, signin } = UserMiddleware;
 const { callBack } = MiddlewareHelper;
 

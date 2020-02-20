@@ -1,19 +1,29 @@
 import { followerModel, followingModel } from '../models/follows';
 
 export default class FollowHelper {
-  static async getFollowings(userId = '') {
+  static async getFollows(userId = '') {
     try {
+      const followers = await followerModel.find({ userId });
       const followings = await followingModel.find({ userId });
-      return { followings };
+      return { followers, followings };
     } catch (error) {
       return error;
     }
   }
 
-  static async getFollowers(userId = '') {
+  static async findFollow(followId = '') {
     try {
-      const follower = await followerModel.find({ userId });
-      return { follower };
+      const follow = await followingModel.findOne({ followId });
+      return { follow };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  static async createFollow(userId = '', followId = '') {
+    try {
+      await followingModel.create({ followingId: followId, userId });
+      return await followerModel.create({ followerId: followId, userId });
     } catch (error) {
       return error;
     }

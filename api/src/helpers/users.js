@@ -29,7 +29,7 @@ export default class UserHelper {
     };
   }
 
-  static async findUserByEmailAndUsername({ username, email }) {
+  static async findUserByEmailAndUsername(username, email) {
     try {
       const newUser = await userModel.findOne({ $or: [{ username }, { email }] });
       return { newUser };
@@ -38,18 +38,21 @@ export default class UserHelper {
     }
   }
 
-  static async getUserByUsernameOrEmail({ user }) {
+  static async getUserByUsernameOrEmail(user) {
     try {
-      const registeredUser = await userModel.find({ $or: [{ username: user }, { email: user }] });
+      const registeredUser = await userModel.findOne({
+        $or: [{ username: user },
+          { email: user }],
+      });
       return { registeredUser };
     } catch (error) {
       return error;
     }
   }
 
-  static async findUserById({ userId }) {
+  static async findUserById(_id) {
     try {
-      const authUser = await userModel.findById({ userId });
+      const authUser = await userModel.findById({ _id });
       return { authUser };
     } catch (error) {
       return error;

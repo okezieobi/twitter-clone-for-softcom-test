@@ -1,6 +1,6 @@
-import HttpResponse from '../helpers/response';
+import HttpResponse from '../utils/response';
 import IndexValidator from './index';
-import TestRequest from '../helpers/testReq';
+import TestRequest from '../utils/testReq';
 
 const { checkStringTypeRequest } = new IndexValidator();
 const { validateTweetOrReply, validateInteger } = new TestRequest();

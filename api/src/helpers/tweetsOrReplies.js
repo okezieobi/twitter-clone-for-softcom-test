@@ -1,39 +1,69 @@
 /* eslint-disable camelcase */
-import Numbers from '../helpers/uniqueNos';
-import SharedModel from './index';
+import SharedHelper from './index';
+import { tweetModel, tweetReplyModel } from '../models/tweetOrReplies';
 
-const { uniqueIds } = Numbers;
-const { handleArrayData } = SharedModel;
+const { handleArrayData } = SharedHelper;
 
-export default class TweetOrReplyModels {
-  static prepareTweetRequest(tweet = '', userId = 0) {
-    return [uniqueIds(), tweet, userId];
-  }
-
-  static prepareTweetResponse({ tweet, id, created_on }) {
+export default class TweetOrReplyHelper {
+  static prepareTweetResponse({ tweet, _id, createdOn }) {
     return {
-      id: parseInt(id, 10),
-      tweet: String(tweet),
-      createdOn: Date(created_on),
+      id: _id,
+      tweet,
+      createdOn: Date(createdOn),
     };
   }
 
-  static prepareReplyRequest(reply = '', userId = 0, tweetOrReplyId = 0) {
-    return [uniqueIds(), reply, userId, tweetOrReplyId];
-  }
-
-  static prepareReplyResponse({
-    id, reply, user_id, created_on,
+  static prepareTweetReplyResponse({
+    _id, tweetReply, userId, createdOn,
   }) {
     return {
-      id: parseInt(id, 10),
-      reply: String(reply),
-      userId: parseInt(user_id, 10),
-      createdOn: Date(created_on),
+      id: _id,
+      tweetReply,
+      userId,
+      createdOn: Date(createdOn),
     };
   }
 
   static prepareTweetResArray(array) {
-    return handleArrayData(array, TweetOrReplyModels.prepareTweetResponse);
+    return handleArrayData(array, TweetOrReplyHelper.prepareTweetResponse);
+  }
+
+  static async createTweet(tweet, userId) {
+    try {
+      const newTweet = await tweetModel.create({ tweet, userId });
+      const newTweetRes = TweetOrReplyHelper.prepareTweetResponse(newTweet);
+      return { newTweetRes };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  static async getTweetsByUserId(userId) {
+    try {
+      const userTweets = await tweetModel.find({ userId });
+      const userTweetsRes = TweetOrReplyHelper.prepareTweetResArray(userTweets);
+      return { userTweetsRes };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  static async findTweetById(_id) {
+    try {
+      const geTweet = await tweetModel.findById({ _id });
+      return { geTweet };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  static async createTweetReply(reply, tweetId, userId) {
+    try {
+      const newTweetReply = await tweetReplyModel.create({ reply, tweetId, userId });
+      const newTweetReplyRes = TweetOrReplyHelper.prepareTweetResponse(newTweetReply);
+      return { newTweetReplyRes };
+    } catch (error) {
+      return error;
+    }
   }
 }

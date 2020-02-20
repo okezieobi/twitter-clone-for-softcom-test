@@ -1,11 +1,11 @@
-import { singletonUserAuth } from '../auth/users';
+import UserAuth from '../auth/users';
 import UserValidator from '../data/users';
 import MiddlewareHelper from './middleware';
 import FollowAuth from '../auth/follows';
 
 const { verifyFollow } = FollowAuth;
 const { validateToken, validateRegisteredUser } = UserValidator;
-const { authenticateAll, verifyToken, getUserByUsernameOrEmail } = singletonUserAuth;
+const { authenticateAll, verifyToken, getUserByUsernameOrEmail } = UserAuth;
 const { routeCallbacks } = MiddlewareHelper;
 
 export default class FollowMiddleware {
