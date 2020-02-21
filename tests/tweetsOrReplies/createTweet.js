@@ -112,7 +112,7 @@ describe('Test endpoint at "/api/v1/tweets" to create a tweet as an authenticate
 
   it('Should not create a tweet at "/api/v1/tweets" as an authenticated user with POST if id from token is not a MongoDB ObjectId', async () => {
     const testData = { tweet: 'First Tweet' };
-    const token = generateToken(createVarChars(100));
+    const token = generateToken(returnRandomValue(createVarChars(12), createVarChars(24)));
     const response = await chai.request(app).post('/api/v1/tweets').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');

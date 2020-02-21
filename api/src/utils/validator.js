@@ -1,8 +1,7 @@
 import validator from 'validator';
-import { isValidObjectId } from 'mongoose';
 
 const {
-  isEmail, isInt, isLength, isJWT,
+  isEmail, isInt, isLength, isJWT, isMongoId,
 } = validator;
 
 export default class Patterns {
@@ -44,7 +43,7 @@ export default class Patterns {
   }
 
   static checkObjectId(id = '') {
-    return isValidObjectId(Patterns.checkForString(id));
+    return isMongoId(Patterns.checkForString(id));
   }
 
   static checkTweetOrReply(tweetOrReply = '') {

@@ -3,7 +3,7 @@ import TweetOrReplyHelper from '../helpers/tweetsOrReplies';
 import TemplateErrors from '../errors/templateLiterals';
 
 const { success201Res, success200Res } = new HttpResponse();
-const { createTweet, createTweetReply, findTweetById } = TweetOrReplyHelper;
+const { createTweet, createTweetReply, getTweetsByUserId } = TweetOrReplyHelper;
 const { consoleError } = TemplateErrors;
 
 export default class TweetAndReplyController {
@@ -22,9 +22,9 @@ export default class TweetAndReplyController {
   }
 
   static async findTweetsByUserId(req, res) {
-    const { authUser: { _id } } = res;
-    const { tweetsByUserId, name, message } = await findTweetById(_id);
+    const { locals: { authUser: { _id } } } = res;
+    const { userTweetsRes, name, message } = await getTweetsByUserId(_id);
     if (name || message) consoleError({ name, message });
-    else success200Res(res, tweetsByUserId);
+    else success200Res(res, userTweetsRes);
   }
 }
