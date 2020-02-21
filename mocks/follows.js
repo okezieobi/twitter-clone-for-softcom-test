@@ -1,10 +1,13 @@
+/* eslint-disable no-underscore-dangle */
+import userSeeds from './users';
+
 export default [
   {
-    followingId: '5126bc054aed4daf9e2ab443',
-    userId: '5126bc054aed4daf9e2ab772',
+    followingId: userSeeds[1]._id,
+    userId: userSeeds[0]._id,
   },
   {
-    followingId: '5126bc054aed4daf9e2ab772',
-    userId: '5126bc054aed4daf9e2ab443',
+    followingId: userSeeds[0]._id,
+    userId: userSeeds[1]._id,
   },
 ];

@@ -1,5 +1,4 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import { Types } from 'mongoose';
 import chai, {
   expect,
 } from 'chai';
@@ -12,6 +11,7 @@ import { userSeeds, tweetReplySeeds, tweetSeeds } from '../mocks';
 import token from '../api/src/utils/jwt';
 
 const { consoleError } = TemplateErrors;
+const { ObjectId } = Types;
 
 class Test {
   static async deleteData() {
@@ -75,15 +75,6 @@ class Test {
   }
 }
 
-require('./users/signup');
-require('./users/signin');
-require('./tweetsOrReplies/createTweet');
-/*
-require('./tweetsOrReplies/getTweetsByUserId');
-require('./tweetsOrReplies/createTweetReply');
-require('./follows/createFollow');
-require('./search/createSearch');
-*/
 
 export {
   expect,
@@ -91,4 +82,8 @@ export {
   chaiHttp,
   app,
   Test,
+  userSeeds,
+  tweetSeeds,
+  tweetReplySeeds,
+  ObjectId,
 };

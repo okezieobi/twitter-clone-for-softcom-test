@@ -24,7 +24,7 @@ export default class Errors {
   }
 
   static notObjectId() {
-    return 'ObjectId provided does not match ObjectId format';
+    return 'Id from token does not match ObjectId format';
   }
 
   static wrongToken() {

@@ -1,30 +1,34 @@
+/* eslint-disable no-underscore-dangle */
+import { Types } from 'mongoose';
+import userSeeds from './users';
+
+const { ObjectId } = Types;
+
 const tweetSeeds = [
   {
-    _id: '5126bc054aed4daf9e2ab772876',
+    _id: new ObjectId(),
     tweet: 'This is my first tweet',
-    userId: '5126bc054aed4daf9e2ab772',
+    userId: userSeeds[0]._id,
   },
   {
-    _id: '5126bc054aed4daf9e2ab772987',
+    _id: new ObjectId(),
     tweet: 'This is my 2nd tweet',
-    userId: '5126bc054aed4daf9e2ab443',
+    userId: userSeeds[1]._id,
   },
 ];
 
 const tweetReplySeeds = [
   {
-    _id: '5126bc054aed4daf9e2ab772321',
+    _id: new ObjectId(),
     tweet: 'This is my first reply to a tweet',
-    userId: '5126bc054aed4daf9e2ab772',
-    tweetId: '5126bc054aed4daf9e2ab772876',
-    createdOn: Date(),
+    userId: userSeeds[0]._id,
+    tweetId: tweetSeeds[0]._id,
   },
   {
-    _id: '5126bc054aed4daf9e2ab772231',
+    _id: new ObjectId(),
     tweet: 'This is my 2nd reply to a tweet',
-    userId: '5126bc054aed4daf9e2ab443',
-    tweetId: '5126bc054aed4daf9e2ab772443',
-    createdOn: Date(),
+    userId: userSeeds[1]._id,
+    tweetId: tweetSeeds[1]._id,
   },
 ];
 
