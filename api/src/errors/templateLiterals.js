@@ -13,6 +13,10 @@ export default class Errors {
     return `${title} is required`;
   }
 
+  static notObjectId(title) {
+    return `${title} does not match MongoDB ObjectId format`;
+  }
+
   static wrongCharLength(title, length) {
     return `${title} must be less than ${length} characters`;
   }

@@ -2,7 +2,7 @@ import HttpResponse from '../utils/response';
 import TemplateErrors from '../errors/templateLiterals';
 import TweetOrReplyHelper from '../helpers/tweetsOrReplies';
 
-const { err404Res } = new HttpResponse();
+const { err404Res } = HttpResponse;
 const { dataNotFound, consoleError } = TemplateErrors;
 const { findTweetById } = TweetOrReplyHelper;
 

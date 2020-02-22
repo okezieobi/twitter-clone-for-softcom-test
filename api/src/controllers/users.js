@@ -4,7 +4,7 @@ import HttpResponse from '../utils/response';
 import UserHelper from '../helpers/users';
 import TemplateErrors from '../errors/templateLiterals';
 
-const { auth200Res, auth201Res } = new HttpResponse();
+const { auth200Res, auth201Res } = HttpResponse;
 const { createUser, prepareResponse } = UserHelper;
 const { generate } = Token;
 const { consoleError } = TemplateErrors;

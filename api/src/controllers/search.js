@@ -1,6 +1,6 @@
 import HttpResponse from '../utils/response';
 
-const { success200Res } = new HttpResponse();
+const { success200Res } = HttpResponse;
 
 export default class SearchController {
   static sendResponse(req, res) {

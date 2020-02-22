@@ -3,7 +3,7 @@ import HttpResponse from '../utils/response';
 import TemplateErrors from '../errors/templateLiterals';
 import FollowHelper from '../helpers/follows';
 
-const { err400Res } = new HttpResponse();
+const { err400Res } = HttpResponse;
 const { getFollowings } = FollowHelper;
 const { dataFound, followSelf, consoleError } = TemplateErrors;
 

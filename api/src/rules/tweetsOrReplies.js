@@ -2,9 +2,9 @@ import HttpResponse from '../utils/response';
 import IndexValidator from './index';
 import TestRequest from '../utils/testReq';
 
-const { checkStringTypeRequest } = new IndexValidator();
-const { validateTweetOrReply, validateInteger } = new TestRequest();
-const { err400Res } = new HttpResponse();
+const { checkStringTypeRequest } = IndexValidator;
+const { validateTweetOrReply, validateObjectId } = new TestRequest();
+const { err400Res } = HttpResponse;
 
 export default class TweetOrReplyValidator {
   static validateTweet({ body: { tweet = '' } }, res, next) {
@@ -14,7 +14,7 @@ export default class TweetOrReplyValidator {
   }
 
   static validateTweetId({ params: { id = '' } }, res, next) {
-    const isTweetIdErr = validateInteger(id, 'Tweet id');
+    const isTweetIdErr = validateObjectId(id, 'Tweet id');
     const resErr = isTweetIdErr ? err400Res(res, isTweetIdErr) : next();
     return resErr;
   }

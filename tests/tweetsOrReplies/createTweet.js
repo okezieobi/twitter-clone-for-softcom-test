@@ -117,6 +117,6 @@ describe('Test endpoint at "/api/v1/tweets" to create a tweet as an authenticate
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token does not match ObjectId format');
+    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token does not match MongoDB ObjectId format');
   });
 });

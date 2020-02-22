@@ -14,11 +14,12 @@ export default class TweetOrReplyHelper {
   }
 
   static prepareTweetReplyResponse({
-    _id, tweetReply, userId, createdOn,
+    _id, reply, tweetId, userId, createdOn,
   }) {
     return {
       id: _id,
-      tweetReply,
+      reply,
+      tweetId,
       userId,
       createdOn: Date(createdOn),
     };
@@ -60,7 +61,7 @@ export default class TweetOrReplyHelper {
   static async createTweetReply(reply, tweetId, userId) {
     try {
       const newTweetReply = await tweetReplyModel.create({ reply, tweetId, userId });
-      const newTweetReplyRes = TweetOrReplyHelper.prepareTweetResponse(newTweetReply);
+      const newTweetReplyRes = TweetOrReplyHelper.prepareTweetReplyResponse(newTweetReply);
       return { newTweetReplyRes };
     } catch (error) {
       return error;

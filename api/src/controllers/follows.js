@@ -3,7 +3,7 @@ import HttpResponse from '../utils/response';
 import FollowHelper from '../helpers/follows';
 import TemplateErrors from '../errors/templateLiterals';
 
-const { success201ResMessage } = new HttpResponse();
+const { success201ResMessage } = HttpResponse;
 const { getFollows, createFollow } = FollowHelper;
 const { consoleError } = TemplateErrors;
 

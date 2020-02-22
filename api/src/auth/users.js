@@ -6,14 +6,14 @@ import Jwt from '../utils/jwt';
 import Bcrypt from '../utils/bcrypt';
 import Validator from '../utils/validator';
 
-const { err400Res, err404Res } = new HttpResponse();
+const { err400Res, err404Res } = HttpResponse;
 const { compare } = Bcrypt;
 const {
-  userExists, userNotExists, wrongPassword, wrongToken, notObjectId,
+  userExists, userNotExists, wrongPassword, wrongToken,
 } = LiteralErrors;
 const { verify } = Jwt;
 const { checkObjectId } = Validator;
-const { consoleError } = TemplateErrors;
+const { consoleError, notObjectId } = TemplateErrors;
 const { findUserByEmailAndUsername, findUserById, getUserByUsernameOrEmail } = UserHelper;
 
 export default class UserAuth {
@@ -49,7 +49,7 @@ export default class UserAuth {
       res.locals.userId = userId;
       return next();
     }
-    return err400Res(res, notObjectId());
+    return err400Res(res, notObjectId('Id from token'));
   }
 
   static async authenticateAll(req, res, next) {

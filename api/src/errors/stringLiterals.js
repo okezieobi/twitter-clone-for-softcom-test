@@ -23,10 +23,6 @@ export default class Errors {
     return 'Token provided does not match JWT format';
   }
 
-  static notObjectId() {
-    return 'Id from token does not match ObjectId format';
-  }
-
   static wrongToken() {
     return 'Token provided does not match any user';
   }

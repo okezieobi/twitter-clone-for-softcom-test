@@ -2,7 +2,7 @@ import HttpResponse from '../utils/response';
 import SearchHelper from '../helpers/search';
 import TemplateErrors from '../errors/templateLiterals';
 
-const { err404Res } = new HttpResponse();
+const { err404Res } = HttpResponse;
 const { searchUsers, searchTweetsOrReplies } = SearchHelper;
 const { noSearchResults, consoleError } = TemplateErrors;
 

@@ -8,9 +8,8 @@ const { findError } = TestRequest;
 const {
   validateEmail, validateVarChar, validatePassword, validateJWT,
 } = new TestRequest();
-const { err400Res } = new HttpResponse();
-const { checkStringTypeRequest } = new IndexValidator();
-
+const { err400Res } = HttpResponse;
+const { checkStringTypeRequest } = IndexValidator;
 const { tokenIsRequired } = LiteralErrors;
 
 

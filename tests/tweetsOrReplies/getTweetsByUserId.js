@@ -16,24 +16,24 @@ const {
 
 chai.use(chaiHttp);
 
-describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by user id as an authenticated user with GET', () => {
-  before(async () => {
+describe('Test endpoint at "/api/v1/tweets" to get all tweets by user id as an authenticated user with GET', () => {
+  before('Delete data before tests', async () => {
     await deleteData();
   });
 
-  before(async () => {
+  before('Seed user data before tests', async () => {
     await seedUsers();
   });
 
-  before(async () => {
+  before('Seed tweet data before tests', async () => {
     await seedTweets();
   });
 
-  after(async () => {
+  after('Delete data after tests', async () => {
     await deleteData();
   });
 
-  it('Should get all tweets of user at "/api/v1/tweets" as an authenicated user with GET if all input fields are valid', async () => {
+  it('Should get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if all input fields are valid', async () => {
     const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).get('/api/v1/tweets').set('token', token);
     expect(response).to.have.status(200);
@@ -90,6 +90,6 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token does not match ObjectId format');
+    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token does not match MongoDB ObjectId format');
   });
 });

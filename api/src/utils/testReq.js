@@ -13,6 +13,7 @@ export default class Requests {
     this.validateNumber = this.validateNumber.bind(this);
     this.validateJWT = this.validateJWT.bind(this);
     this.validateTweetOrReply = this.validateTweetOrReply.bind(this);
+    this.validateObjectId = this.validateObjectId.bind(this);
   }
 
   static findError(...errorList) {
@@ -49,8 +50,8 @@ export default class Requests {
     return this.constructor.validateWithTests(jwt, 'checkJWT', 'notJWT');
   }
 
-  validateObjectId(id) {
-    return this.contructor.validateWithTests(id, 'checkObjectId', 'notObjectId');
+  validateObjectId(id, objectIdTitle) {
+    return this.constructor.validateWithTests(id, 'checkObjectId', 'notObjectId', objectIdTitle);
   }
 
   validateVarChar(chars, charTitle) {
