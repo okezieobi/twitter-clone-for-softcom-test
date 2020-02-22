@@ -23,7 +23,7 @@ export default class FollowHelper {
   static async createFollow(userId = '', followId = '') {
     try {
       await followingModel.create({ followingId: followId, userId });
-      return await followerModel.create({ followerId: followId, userId });
+      return await followerModel.create({ followerId: userId, userId: followId });
     } catch (error) {
       return error;
     }

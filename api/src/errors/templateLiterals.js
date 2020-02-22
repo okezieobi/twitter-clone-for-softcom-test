@@ -9,6 +9,10 @@ export default class Errors {
     return error(err);
   }
 
+  static throwError(err) {
+    throw err;
+  }
+
   static isRequired(title) {
     return `${title} is required`;
   }

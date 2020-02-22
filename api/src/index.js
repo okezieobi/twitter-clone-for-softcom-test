@@ -2,9 +2,11 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import app from './app';
+import TemplateErrors from './errors/templateLiterals';
+
+const { consoleError, consoleWarn } = TemplateErrors;
 
 dotenv.config();
-
 
 const startApp = async () => {
   try {
@@ -16,11 +18,11 @@ const startApp = async () => {
         useCreateIndex: true,
       });
     const db = mongoose.connection;
-    await db.once('open', () => console.warn('connected to database'));
+    await db.once('open', () => consoleWarn('connected to database'));
     const port = process.env.PORT || '5000';
-    app.listen(port, () => console.warn(`App is live and listening on port ${port}!`));
+    app.listen(port, () => consoleWarn(`App is live and listening on port ${port}!`));
   } catch (error) {
-    console.error(error);
+    throw consoleError(error);
   }
 };
 

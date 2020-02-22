@@ -16,7 +16,7 @@ const {
 
 chai.use(chaiHttp);
 
-describe('Test endpoint at "/api/v1/tweets/:id" to create a tweet repl/repliesy as an authenticated User with POST', () => {
+describe('Test endpoint at "/api/v1/tweets/:id/replies" to create a tweet repl/repliesy as an authenticated User with POST', () => {
   before('Delete data before tests', async () => {
     await deleteData();
   });

@@ -13,7 +13,7 @@ export default class UserController {
   static async addUser({ body }, res) {
     const { newUserRes, name, message } = await createUser(body);
     if (name || message) return consoleError({ name, message });
-    return auth201Res(res, newUserRes, generate(newUserRes._id));
+    return auth201Res(res, newUserRes, generate(newUserRes.id));
   }
 
   static sendAuthRes(req, res) {
