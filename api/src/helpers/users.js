@@ -29,7 +29,7 @@ export default class UserHelper {
     };
   }
 
-  static async findUserByEmailAndUsername(username, email) {
+  static async findUserByEmailAndUsername(username = '', email = '') {
     try {
       const newUser = await userModel.findOne({ $or: [{ username }, { email }] });
       return { newUser };
@@ -38,7 +38,7 @@ export default class UserHelper {
     }
   }
 
-  static async getUserByUsernameOrEmail(user) {
+  static async getUserByUsernameOrEmail(user = '') {
     try {
       const registeredUser = await userModel.findOne({
         $or: [{ username: user },
@@ -50,7 +50,7 @@ export default class UserHelper {
     }
   }
 
-  static async findUserById(_id) {
+  static async findUserById(_id = '') {
     try {
       const authUser = await userModel.findById({ _id });
       return { authUser };
@@ -59,7 +59,7 @@ export default class UserHelper {
     }
   }
 
-  static async createUser(userReqData) {
+  static async createUser(userReqData = {}) {
     try {
       const userData = UserHelper.prepareRequest(userReqData);
       const addedUser = await userModel.create(userData);

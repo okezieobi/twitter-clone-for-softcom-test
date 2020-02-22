@@ -8,11 +8,11 @@ const { validateToken } = UserValidator;
 const { authenticateAll, verifyToken } = UserAuth;
 const { routeCallbacks } = MiddlewareHelper;
 const { validateSearch } = SearchValidator;
-const { getSearchResult, getUserSearch, getTweetOrReplySearch } = SearchAuth;
+const { checkSearchResult, getUserSearch, getTweetOrReplySearch } = SearchAuth;
 
 export default class Searches {
   static createSearch() {
     return routeCallbacks(validateSearch, validateToken, verifyToken,
-      authenticateAll, getTweetOrReplySearch, getUserSearch, getSearchResult);
+      authenticateAll, getTweetOrReplySearch, getUserSearch, checkSearchResult);
   }
 }

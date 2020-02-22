@@ -29,7 +29,7 @@ export default class TweetOrReplyHelper {
     return handleArrayData(array, TweetOrReplyHelper.prepareTweetResponse);
   }
 
-  static async createTweet(tweet, userId) {
+  static async createTweet(tweet = '', userId = '') {
     try {
       const newTweet = await tweetModel.create({ tweet, userId });
       const newTweetRes = TweetOrReplyHelper.prepareTweetResponse(newTweet);
@@ -39,7 +39,7 @@ export default class TweetOrReplyHelper {
     }
   }
 
-  static async getTweetsByUserId(userId) {
+  static async getTweetsByUserId(userId = '') {
     try {
       const userTweets = await tweetModel.find({ userId });
       const userTweetsRes = TweetOrReplyHelper.prepareTweetResArray(userTweets);
@@ -49,7 +49,7 @@ export default class TweetOrReplyHelper {
     }
   }
 
-  static async findTweetById(_id) {
+  static async findTweetById(_id = '') {
     try {
       const getTweet = await tweetModel.findById({ _id });
       return { getTweet };
@@ -58,7 +58,7 @@ export default class TweetOrReplyHelper {
     }
   }
 
-  static async createTweetReply(reply, tweetId, userId) {
+  static async createTweetReply(reply = '', tweetId = '', userId = '') {
     try {
       const newTweetReply = await tweetReplyModel.create({ reply, tweetId, userId });
       const newTweetReplyRes = TweetOrReplyHelper.prepareTweetReplyResponse(newTweetReply);

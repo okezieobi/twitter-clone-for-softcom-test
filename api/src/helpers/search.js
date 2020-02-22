@@ -13,7 +13,7 @@ export default class SearchHelper {
     return new RegExp(search, 'i');
   }
 
-  static async searchUsers(search) {
+  static async searchUsers(search = '') {
     try {
       const searchPattern = SearchHelper.prepareRequest(search);
       const userSearch = await userModel.find({
@@ -22,8 +22,9 @@ export default class SearchHelper {
       });
       if (userSearch.length > 0) {
         userSearch.forEach(async (user) => {
-          const followings = await followingModel.find({ userId: user._id });
-          const followers = await followerModel.find({ userId: user._id });
+          const { _id } = user;
+          const followings = await followingModel.find({ userId: _id });
+          const followers = await followerModel.find({ userId: _id });
           const eachUser = user;
           eachUser.followings = followings;
           eachUser.followers = followers;
@@ -36,11 +37,13 @@ export default class SearchHelper {
     }
   }
 
-  static async searchTweetsOrReplies(search) {
+  static async searchTweetsOrReplies(search = '') {
     try {
       const searchPattern = SearchHelper.prepareRequest(search);
       const tweetSearch = await tweetModel.find({ tweet: { $regex: searchPattern } });
-      const tweetReplySearch = await tweetReplyModel({ tweetReply: { $regex: searchPattern } });
+      const tweetReplySearch = await tweetReplyModel.find(
+        { tweetReply: { $regex: searchPattern } },
+      );
       const tweetSearchRes = tweetSearch.map((tweet) => prepareTweetResponse(tweet));
       const tweetReplySearchRes = tweetReplySearch.map(
         (tweetReply) => prepareTweetReplyResponse(tweetReply),
