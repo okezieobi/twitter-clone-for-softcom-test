@@ -1,7 +1,7 @@
 import validator from 'validator';
 
 const {
-  isEmail, isInt, isLength, isJWT, isMongoId,
+  isEmail, isLength, isJWT, isMongoId,
 } = validator;
 
 export default class Patterns {
@@ -36,11 +36,11 @@ export default class Patterns {
     return isInt(Patterns.checkForString(integer))
     && parseInt(Patterns.checkForString(integer), 10) >= 0;
   }
+  */
 
   static checkJWT(jwt = '') {
     return isJWT(Patterns.checkForString(jwt));
   }
-  */
 
   static checkObjectId(id = '') {
     return isMongoId(Patterns.checkForString(id));
