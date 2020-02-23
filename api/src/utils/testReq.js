@@ -9,8 +9,8 @@ export default class Requests {
     this.validateEmail = this.validateEmail.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
     this.validateVarChar = this.validateVarChar.bind(this);
-    this.validateInteger = this.validateInteger.bind(this);
-    this.validateNumber = this.validateNumber.bind(this);
+    // this.validateInteger = this.validateInteger.bind(this);
+    // this.validateNumber = this.validateNumber.bind(this);
     this.validateJWT = this.validateJWT.bind(this);
     this.validateTweetOrReply = this.validateTweetOrReply.bind(this);
     this.validateObjectId = this.validateObjectId.bind(this);
@@ -58,6 +58,7 @@ export default class Requests {
     return this.constructor.validateWithTests(chars, 'checkVarChar', 'notVarChar', charTitle);
   }
 
+  /*
   validateNumber(number, numberTitle) {
     return this.constructor.validateWithTests(number, 'checkNumber', 'notNumber', numberTitle);
   }
@@ -65,6 +66,7 @@ export default class Requests {
   validateInteger(integer, integerTitle) {
     return this.constructor.validateWithTests(integer, 'checkInteger', 'notInteger', integerTitle);
   }
+  */
 
   validateTweetOrReply(tweet, replyOrTweet) {
     return this.constructor.validateWithTests(tweet, 'checkTweetOrReply', 'notTweetOrReply', replyOrTweet);

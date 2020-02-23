@@ -9,9 +9,11 @@ export default class Errors {
     return error(err);
   }
 
+  /*
   static throwError(err) {
     throw err;
   }
+  */
 
   static isRequired(title) {
     return `${title} is required`;
@@ -29,6 +31,7 @@ export default class Errors {
     return this.wrongCharLength(title, 128);
   }
 
+  /*
   static notNumbers(title) {
     return `${title} must be a positive number`;
   }
@@ -40,6 +43,7 @@ export default class Errors {
   static restrictedAccess(title) {
     return `Only ${title} can access this resource`;
   }
+  */
 
   static dataNotFound(title) {
     return `${title} not found`;

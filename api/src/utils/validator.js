@@ -31,7 +31,6 @@ export default class Patterns {
    checkNumber(number = '') {
     return isNumeric(number || String(number)) && parseInt(number || String(number), 10) >= 0;
   }
-  */
 
   static checkInteger(integer = '') {
     return isInt(Patterns.checkForString(integer))
@@ -41,6 +40,7 @@ export default class Patterns {
   static checkJWT(jwt = '') {
     return isJWT(Patterns.checkForString(jwt));
   }
+  */
 
   static checkObjectId(id = '') {
     return isMongoId(Patterns.checkForString(id));
