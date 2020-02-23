@@ -42,7 +42,7 @@ export default class SearchHelper {
       const searchPattern = SearchHelper.prepareRequest(search);
       const tweetSearch = await tweetModel.find({ tweet: { $regex: searchPattern } });
       const tweetReplySearch = await tweetReplyModel.find(
-        { tweetReply: { $regex: searchPattern } },
+        { reply: { $regex: searchPattern } },
       );
       const tweetSearchRes = tweetSearch.map((tweet) => prepareTweetResponse(tweet));
       const tweetReplySearchRes = tweetReplySearch.map(
