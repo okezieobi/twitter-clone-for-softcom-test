@@ -5,9 +5,12 @@ import chai, {
 import chaiHttp from 'chai-http';
 import app from '../api/src';
 import userModel from '../api/src/models/users';
+import { followerModel, followingModel } from '../api/src/models/follows';
 import TemplateErrors from '../api/src/errors/templateLiterals';
 import { tweetModel, tweetReplyModel } from '../api/src/models/tweetOrReplies';
-import { userSeeds, tweetReplySeeds, tweetSeeds } from '../mocks';
+import {
+  userSeeds, tweetReplySeeds, tweetSeeds, followSeeds,
+} from '../mocks';
 import token from '../api/src/utils/jwt';
 
 const { consoleError } = TemplateErrors;
@@ -19,6 +22,8 @@ class Test {
       await tweetReplyModel.deleteMany();
       await tweetModel.deleteMany();
       await userModel.deleteMany();
+      await followerModel.deleteMany();
+      await followingModel.deleteMany();
     } catch (error) {
       consoleError();
     }
@@ -42,7 +47,16 @@ class Test {
 
   static async seedTweetReplies() {
     try {
-      tweetReplyModel.create(tweetReplySeeds);
+      await tweetReplyModel.create(tweetReplySeeds);
+    } catch (error) {
+      consoleError(error);
+    }
+  }
+
+  static async seedFollows() {
+    try {
+      await followerModel.create(followSeeds[1]);
+      await followingModel.create(followSeeds[0]);
     } catch (error) {
       consoleError(error);
     }

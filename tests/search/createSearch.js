@@ -12,7 +12,7 @@ import {
 } from '../index';
 
 const {
-  deleteData, seedUsers, generateToken, createVarChars,
+  deleteData, seedUsers, generateToken, createVarChars, seedFollows,
   seedTweets, seedTweetReplies, getRandomArrayIndex, returnRandomValue,
 } = Test;
 
@@ -33,6 +33,10 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
 
   before('Seed tweet reply data before tests', async () => {
     await seedTweetReplies();
+  });
+
+  before('Seed follow data before tests', async () => {
+    await seedFollows();
   });
 
   after('Delete data after tests', async () => {
@@ -79,7 +83,7 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
       expect(response.body.data.tweetReplySearchRes[randomReplyResIndex]).to.have.property('reply').to.be.a('string');
       expect(response.body.data.tweetReplySearchRes[randomReplyResIndex]).to.have.property('createdOn').to.be.a('string');
     }
-  });
+  }).timeout(3000);
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if search input is a falsy value', async () => {
     const testData = { search: returnRandomValue('', undefined, null, 0, NaN) };
