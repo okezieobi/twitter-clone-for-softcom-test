@@ -10,7 +10,7 @@ dotenv.config();
 
 const startApp = async () => {
   try {
-    mongoose.connect(process.env.MONGODB_DEV_URL,
+    mongoose.connect(process.env.MONGODB_ATLAS_URL || process.env.MONGODB_DEV_URL,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
