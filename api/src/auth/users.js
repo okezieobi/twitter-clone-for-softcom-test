@@ -39,13 +39,9 @@ export default class UserAuth {
   }
 
   static verifyPassword({ body: { password = '' } }, { locals: { registeredUser: { hashedPassword } } }, next) {
-    try {
-      const verifyPassword = compare(hashedPassword, password);
-      if (verifyPassword) next();
-      else throw new ExtendedErrs(400, wrongPassword);
-    } catch (error) {
-      next(error);
-    }
+    const verifyPassword = compare(hashedPassword, password);
+    if (verifyPassword) next();
+    else throw new ExtendedErrs(400, wrongPassword);
   }
 
   static verifyToken({ headers: { token = '' } }, res, next) {

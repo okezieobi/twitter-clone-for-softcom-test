@@ -4,29 +4,17 @@ const { checkStringTypeRequest, validateTweetOrReply, validateObjectId } = Index
 
 export default class TweetOrReplyValidator {
   static validateTweet({ body: { tweet = '' } }, res, next) {
-    try {
-      checkStringTypeRequest(tweet, 'Tweet', validateTweetOrReply);
-      next();
-    } catch (error) {
-      next(error);
-    }
+    checkStringTypeRequest(tweet, 'Tweet', validateTweetOrReply);
+    next();
   }
 
   static validateTweetId({ params: { id = '' } }, res, next) {
-    try {
-      validateObjectId(id, 'Tweet id');
-      next();
-    } catch (error) {
-      next(error);
-    }
+    validateObjectId(id, 'Tweet id');
+    next();
   }
 
   static validateReply({ body: { reply = '' } }, res, next) {
-    try {
-      checkStringTypeRequest(reply, 'Reply', validateTweetOrReply);
-      next();
-    } catch (error) {
-      next(error);
-    }
+    checkStringTypeRequest(reply, 'Reply', validateTweetOrReply);
+    next();
   }
 }

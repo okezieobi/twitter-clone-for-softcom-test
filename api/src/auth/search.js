@@ -26,14 +26,8 @@ export default class SearchAuth {
   }
 
   static checkSearchResult({ body: { search = '' } }, { locals: { userSearchRes, tweetSearchRes, tweetReplySearchRes } }, next) {
-    try {
-      if (userSearchRes.length > 0 || tweetSearchRes.length > 0 || tweetReplySearchRes.length > 0) {
-        next();
-      } else {
-        throw new ExtendedErrs(404, noSearchResults(search));
-      }
-    } catch (error) {
-      next(error);
-    }
+    if (userSearchRes.length > 0 || tweetSearchRes.length > 0
+      || tweetReplySearchRes.length > 0) next();
+    else throw new ExtendedErrs(404, noSearchResults(search));
   }
 }
