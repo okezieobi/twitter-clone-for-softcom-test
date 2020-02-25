@@ -19,7 +19,7 @@ https://www.pivotaltracker.com/projects/2431559
 ExpressJS/NodeJS
 
 ## Database
-MongoDB with Mongoose
+MongoDB with Mongoose ODM
 
 ## Features:
 - User signup
