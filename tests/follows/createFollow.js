@@ -1,36 +1,36 @@
+/* eslint-disable no-underscore-dangle */
 import {
   Test,
   expect,
   chai,
   chaiHttp,
   app,
-  pool,
+  userSeeds,
+  ObjectId,
 } from '../index';
 
-const { queryNone, queryAny } = pool;
 const {
-  deleteData, users, generateToken, createVarChars,
+  deleteData, seedUsers, generateToken, createVarChars, returnRandomValue,
 } = Test;
-const { returnRandomValue } = new Test();
 
 chai.use(chaiHttp);
 
 describe('Test endpoint at "/api/v1/follows" to follow another registered user as an authenticated user with POST', () => {
-  before(async () => {
-    await queryNone(deleteData());
+  before('Delete data before tests', async () => {
+    await deleteData();
   });
 
-  before(async () => {
-    await queryAny(users());
+  before('Seed user data before tests', async () => {
+    await seedUsers();
   });
 
-  after(async () => {
-    await queryNone(deleteData());
+  after('Delete data after tests', async () => {
+    await deleteData();
   });
 
   it('Should follow another registered user at "/api/v1/follows" as an authenticated user with POST if all inputs are valid', async () => {
     const testData = { user: 'Ekemezie' };
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(201);
     expect(response.body).to.be.an('object');
@@ -39,48 +39,48 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is a falsy value', async () => {
-    const testData = { user: returnRandomValue(undefined, null, '') };
+    const testData = { user: returnRandomValue(undefined, null, '', NaN, 0) };
     const token = generateToken('1010101010101');
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username is required');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username is required');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is not sent', async () => {
     const testData = {};
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username is required');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username is required');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is not string data type', async () => {
     const testData = { user: 3000 };
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username must be string data type');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username must be string data type');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is more than 128 characters', async () => {
     const testData = { user: createVarChars(200) };
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username must be less than 128 characters');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username must be less than 128 characters');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is not found', async () => {
     const testData = { user: 'ahahazizizi' };
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(404);
     expect(response.body).to.be.an('object');
@@ -90,7 +90,7 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is same as authenticated user', async () => {
     const testData = { user: 'Obiedere' };
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -100,7 +100,7 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is already being followed ', async () => {
     const testData = { user: 'Ekemezie' };
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -139,7 +139,7 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if token does not match any user', async () => {
     const testData = { user: 'Ekemezie' };
-    const token = generateToken('505050556565555');
+    const token = generateToken(new ObjectId());
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(404);
     expect(response.body).to.be.an('object');
@@ -147,13 +147,13 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
     expect(response.body).to.have.property('error').to.be.an('string').to.equal('Token provided does not match any user');
   });
 
-  it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if id from token is not a positive integer', async () => {
+  it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if id from token does not match MongoDB ObjectId format', async () => {
     const testData = { user: 'Ekemezie' };
-    const token = generateToken(returnRandomValue('-5050505050505', '-505.0505050505'));
+    const token = generateToken(returnRandomValue(createVarChars(12), createVarChars(24)));
     const response = await chai.request(app).post('/api/v1/follows').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Id from token must be a positive integer');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Id from token does not match MongoDB ObjectId format');
   });
 });

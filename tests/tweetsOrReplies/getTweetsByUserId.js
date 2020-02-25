@@ -1,39 +1,40 @@
+/* eslint-disable no-underscore-dangle */
 import {
   Test,
   expect,
   chai,
   chaiHttp,
   app,
-  pool,
+  userSeeds,
+  ObjectId,
 } from '../index';
 
-const { queryNone, queryAny } = pool;
 const {
-  deleteData, users, tweetsOrReplies, generateToken, createVarChars, getRandomArrayIndex,
+  deleteData, seedUsers, seedTweets,
+  generateToken, createVarChars, getRandomArrayIndex, returnRandomValue,
 } = Test;
-const { returnRandomValue } = new Test();
 
 chai.use(chaiHttp);
 
-describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by user id as an authenticated user with GET', () => {
-  before(async () => {
-    await queryNone(deleteData());
+describe('Test endpoint at "/api/v1/tweets" to get all tweets by user id as an authenticated user with GET', () => {
+  before('Delete data before tests', async () => {
+    await deleteData();
   });
 
-  before(async () => {
-    await queryAny(users());
+  before('Seed user data before tests', async () => {
+    await seedUsers();
   });
 
-  before(async () => {
-    await queryAny(tweetsOrReplies());
+  before('Seed tweet data before tests', async () => {
+    await seedTweets();
   });
 
-  after(async () => {
-    await queryNone(deleteData());
+  after('Delete data after tests', async () => {
+    await deleteData();
   });
 
-  it('Should get all tweets of user at "/api/v1/tweets" as an authenicated user with GET if all input fields are valid', async () => {
-    const token = generateToken(5050505050505);
+  it('Should get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if all input fields are valid', async () => {
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).get('/api/v1/tweets').set('token', token);
     expect(response).to.have.status(200);
     expect(response.body).to.be.an('object');
@@ -42,11 +43,11 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
     const { data } = response.body;
     const randomIndex = getRandomArrayIndex(data);
     if (data.length > 0) {
-      expect(response.body.data[randomIndex]).to.have.property('id').to.be.a('number');
+      expect(response.body.data[randomIndex]).to.have.property('id').to.be.a('string');
       expect(response.body.data[randomIndex]).to.have.property('tweet').to.be.a('string');
       expect(response.body.data[randomIndex]).to.have.property('createdOn').to.be.a('string');
     }
-  });
+  }).timeout(3000);
 
   it('Should not get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if token is an empty string', async () => {
     const token = '';
@@ -75,7 +76,7 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
   });
 
   it('Should not get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if id from token does not match any user', async () => {
-    const token = generateToken('505050556565555');
+    const token = generateToken(new ObjectId());
     const response = await chai.request(app).get('/api/v1/tweets').set('token', token);
     expect(response).to.have.status(404);
     expect(response.body).to.be.an('object');
@@ -83,12 +84,12 @@ describe('Test endpoint at "/api/v1/AndtweetsAndReplies" to get all tweets by us
     expect(response.body).to.have.property('error').to.be.a('string').to.equal('Token provided does not match any user');
   });
 
-  it('Should not get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if id from token is not a positive integer', async () => {
-    const token = generateToken(returnRandomValue('-5050505050505', '-505.0505050505'));
+  it('Should not get all tweets of user at "/api/v1/tweets" as an authenticated user with GET if id from token does not match MongoDB ObjectId format', async () => {
+    const token = generateToken(returnRandomValue(createVarChars(12), createVarChars(24)));
     const response = await chai.request(app).get('/api/v1/tweets').set('token', token);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token must be a positive integer');
+    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token does not match MongoDB ObjectId format');
   });
 });

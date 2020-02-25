@@ -1,29 +1,33 @@
-import database from '../db/pgConnect';
-import HttpResponse from '../helpers/response';
-import Queries from '../queries/search';
-import Models from '../models/search';
-import templateErrors from '../errors/templateLiterals';
+import SearchHelper from '../helpers/search';
+import ExtendedErrs from '../errors/extended';
 
-const { err404Res } = new HttpResponse();
-const { searchAll } = Queries;
-const { pool } = database;
-const { prepareRequest, prepareResponse } = Models;
-const { noSearchResults } = templateErrors;
+const { searchUsers, searchTweetsOrReplies } = SearchHelper;
+const { noSearchResults } = ExtendedErrs;
 
-class SearchAuth {
-  constructor() {
-    this.getSearches = this.getSearches.bind(this);
+export default class SearchAuth {
+  static async getUserSearch({ body: { search = '' } }, res, next) {
+    try {
+      res.locals.userSearchRes = await searchUsers(search);
+      next();
+    } catch (error) {
+      next(error);
+    }
   }
 
-  async getSearches({ body: { search = '' } }, res, next) {
-    const searchResults = await searchAll(pool, prepareRequest(search));
-    const { userRes, tweetRes, replyRes } = prepareResponse(searchResults);
-    if (userRes.length !== 0 || tweetRes.length !== 0 || replyRes.length !== 0) {
-      this.searches = { userRes, tweetRes, replyRes };
-      return next();
+  static async getTweetOrReplySearch({ body: { search = '' } }, res, next) {
+    try {
+      const { tweetSearchRes, tweetReplySearchRes } = await searchTweetsOrReplies(search);
+      res.locals.tweetSearchRes = tweetSearchRes;
+      res.locals.tweetReplySearchRes = tweetReplySearchRes;
+      next();
+    } catch (error) {
+      next(error);
     }
-    return err404Res(res, noSearchResults(search));
+  }
+
+  static checkSearchResult({ body: { search = '' } }, { locals: { userSearchRes, tweetSearchRes, tweetReplySearchRes } }, next) {
+    if (userSearchRes.length > 0 || tweetSearchRes.length > 0
+      || tweetReplySearchRes.length > 0) next();
+    else throw new ExtendedErrs(404, noSearchResults(search));
   }
 }
-
-export default new SearchAuth();

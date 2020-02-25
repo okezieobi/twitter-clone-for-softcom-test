@@ -1,9 +1,37 @@
-import Numbers from '../helpers/uniqueNos';
+import { Schema, model } from 'mongoose';
 
-const { uniqueIds } = Numbers;
+const followingSchema = new Schema({
+  followingId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    unique: true,
+    ref: 'User',
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
+});
 
-export default class FollowModel {
-  static prepareRequest(userId = 0, followId = 0) {
-    return [userId, followId, uniqueIds(), uniqueIds()];
-  }
-}
+
+const followerSchema = new Schema({
+  followerId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    unique: true,
+    ref: 'User',
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
+});
+
+const followingModel = model('Following', followingSchema);
+const followerModel = model('Follower', followerSchema);
+
+export {
+  followerModel, followingModel,
+};

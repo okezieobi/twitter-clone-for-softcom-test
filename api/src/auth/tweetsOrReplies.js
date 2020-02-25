@@ -1,22 +1,17 @@
-/* eslint-disable no-console */
-import HttpResponse from '../helpers/response';
-import database from '../db/pgConnect';
-import templateErrors from '../errors/templateLiterals';
-import Queries from '../queries/tweetsOrReplies';
+import ExtendedErrs from '../errors/extended';
+import TweetOrReplyHelper from '../helpers/tweetsOrReplies';
 
-const { err404Res } = new HttpResponse();
-const { findTweetById } = Queries;
-const { queryOneOrNone } = database;
-const { dataNotFound } = templateErrors;
+const { dataNotFound } = ExtendedErrs;
+const { findTweetById } = TweetOrReplyHelper;
 
 export default class TweetOrReplyAuth {
   static async authTweetById({ params: { id = '' } }, res, next) {
     try {
-      const getTweetById = await queryOneOrNone(findTweetById(), id);
-      const resErr = getTweetById ? next() : err404Res(res, dataNotFound('Tweet'));
-      return resErr;
-    } catch (err) {
-      return console.error(err);
+      const getTweet = await findTweetById(id);
+      if (getTweet) next();
+      else throw new ExtendedErrs(404, dataNotFound('Tweet'));
+    } catch (error) {
+      next(error);
     }
   }
 }

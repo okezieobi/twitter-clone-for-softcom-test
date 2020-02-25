@@ -12,7 +12,7 @@
     "start": "node api/dist/index.js",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "codeClimate": "nyc --reporter=lcov npm test",
-    "test": "mocha --require @babel/register tests/index.js --exit"
+    "test": "mocha --require @babel/register tests/test.js --exit"
   },
   "repository": {
     "type": "git",
@@ -41,7 +41,6 @@
   },
   "dependencies": {
     "bcryptjs": "",
-    "bluebird": "",
     "body-parser": "",
     "chai": "",
     "chai-http": "",
@@ -50,13 +49,12 @@
     "dotenv": "",
     "express": "",
     "jsonwebtoken": "",
-    "moment": "",
-    "pg-promise": "",
+    "luxon": "^1.22.0",
+    "mongodb": "^3.5.3",
+    "mongoose": "^5.9.1",
     "regenerator-runtime": "",
     "swagger-jsdoc": "",
     "swagger-ui-express": "",
-    "underscore": "",
-    "unique-random": "",
     "validator": ""
   },
   "heroku-run-build-script": true

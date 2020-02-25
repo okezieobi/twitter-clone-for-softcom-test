@@ -1,59 +1,37 @@
-/* eslint-disable no-console */
-/* eslint-disable camelcase */
-import database from '../db/pgConnect';
-import { singletonUserAuth } from '../auth/users';
-import HttpResponse from '../helpers/response';
-import Models from '../models/tweetsOrReplies';
-import Queries from '../queries/tweetsOrReplies';
+import HttpResponse from '../utils/response';
+import TweetOrReplyHelper from '../helpers/tweetsOrReplies';
 
-const { success201Res, success200Res } = new HttpResponse();
-const { createTweet, getTweetsByUserId, createTweetReply } = Queries;
-const {
-  prepareTweetRequest, prepareTweetResponse, prepareTweetResArray,
-  prepareReplyRequest, prepareReplyResponse,
-} = Models;
-const { queryOne, queryAny } = database;
+const { success201Res, success200Res } = HttpResponse;
+const { createTweet, createTweetReply, getTweetsByUserId } = TweetOrReplyHelper;
 
-class TweetAndReplyController {
-  constructor() {
-    this.addTweet = this.addTweet.bind(this);
-    this.findTweetsByUserId = this.findTweetsByUserId.bind(this);
-    this.addTweetReply = this.addTweetReply.bind(this);
-  }
-
-  async addTweet({ body: { tweet = '' } }, res) {
+export default class TweetAndReplyController {
+  static async addTweet({ body: { tweet = '' } }, res, next) {
     try {
-      const { authUser } = singletonUserAuth;
-      this.newTweet = await queryOne(createTweet(), prepareTweetRequest(tweet, authUser.id));
-      return success201Res(res, prepareTweetResponse(this.newTweet));
-    } catch (err) {
-      return console.error(err);
+      const { locals: { authUser: { _id } } } = res;
+      const newTweetRes = await createTweet(tweet, _id);
+      success201Res(res, newTweetRes);
+    } catch (error) {
+      next(error);
     }
   }
 
-  async addTweetReply({ body: { reply = '' }, params: { id = '' } }, res) {
+  static async addTweetReply({ body: { reply = '' }, params: { id = '' } }, res, next) {
     try {
-      const { authUser } = singletonUserAuth;
-      const arrayData = prepareReplyRequest(reply, authUser.id, id);
-      this.newReply = await queryOne(createTweetReply(), arrayData);
-      const { tweet_id } = this.newReply;
-      const newReply = prepareReplyResponse(this.newReply);
-      newReply.tweetId = parseInt(tweet_id, 10);
-      return success201Res(res, newReply);
-    } catch (err) {
-      return console.error(err);
+      const { locals: { authUser: { _id } } } = res;
+      const newTweetReplyRes = await createTweetReply(reply, id, _id);
+      success201Res(res, newTweetReplyRes);
+    } catch (error) {
+      next(error);
     }
   }
 
-  async findTweetsByUserId(req, res) {
+  static async findTweetsByUserId(req, res, next) {
     try {
-      const { authUser } = singletonUserAuth;
-      this.tweetsByUserId = await queryAny(getTweetsByUserId(), authUser.id);
-      return success200Res(res, prepareTweetResArray(this.tweetsByUserId));
-    } catch (err) {
-      return console.error(err);
+      const { locals: { authUser: { _id } } } = res;
+      const userTweetsRes = await getTweetsByUserId(_id);
+      success200Res(res, userTweetsRes);
+    } catch (error) {
+      next(error);
     }
   }
 }
-
-export default new TweetAndReplyController();

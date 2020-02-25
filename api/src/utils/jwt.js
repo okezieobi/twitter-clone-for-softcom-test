@@ -15,6 +15,6 @@ export default class Token {
   }
 
   static verify(token = '') {
-    return verify(token, process.env.SECRET, (err, decoded) => decoded || err);
+    return verify(token, process.env.SECRET);
   }
 }

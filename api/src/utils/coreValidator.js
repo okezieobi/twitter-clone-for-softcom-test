@@ -1,18 +1,18 @@
 import validator from 'validator';
 
 const {
-  isEmail, isInt, isLength, isJWT,
+  isEmail, isLength, isJWT, isMongoId,
 } = validator;
 
 export default class Patterns {
   static checkForString(data) {
-    this.checkStringResult = typeof data === 'string' ? data : String(data);
-    return this.checkStringResult;
+    Patterns.checkStringResult = typeof data === 'string' ? data : String(data);
+    return Patterns.checkStringResult;
   }
 
   static validateEmail(email = '') {
     return isEmail(Patterns.checkForString(email))
-    && this.checkCharLength(Patterns.checkForString(email), 128);
+    && Patterns.checkCharLength(Patterns.checkForString(email), 128);
   }
 
   static validatePassword(password = '') {
@@ -24,25 +24,25 @@ export default class Patterns {
   }
 
   static checkVarChar(varChar = '') {
-    return this.checkCharLength(varChar, 128);
+    return Patterns.checkCharLength(varChar, 128);
   }
 
   /*
    checkNumber(number = '') {
     return isNumeric(number || String(number)) && parseInt(number || String(number), 10) >= 0;
   }
-  */
 
   static checkInteger(integer = '') {
     return isInt(Patterns.checkForString(integer))
     && parseInt(Patterns.checkForString(integer), 10) >= 0;
   }
+  */
 
   static checkJWT(jwt = '') {
     return isJWT(Patterns.checkForString(jwt));
   }
 
-  static checkTweetOrReply(tweetOrReply = '') {
-    return this.checkCharLength(tweetOrReply, 280);
+  static checkObjectId(id = '') {
+    return isMongoId(Patterns.checkForString(id));
   }
 }

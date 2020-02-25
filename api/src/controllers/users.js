@@ -1,46 +1,24 @@
-/* eslint-disable no-console */
-import database from '../db/pgConnect';
-import Token from '../helpers/jwt';
-import followController from './follows';
-import HttpResponse from '../helpers/response';
-import Models from '../models/users';
-import UserQueries from '../queries/users';
-import { singletonUserAuth } from '../auth/users';
+/* eslint-disable no-underscore-dangle */
+import Token from '../utils/jwt';
+import HttpResponse from '../utils/response';
+import UserHelper from '../helpers/users';
 
-const { auth200Res, auth201Res } = new HttpResponse();
-const { prepareRequest, prepareResponse } = Models;
-const { createClient } = UserQueries;
+const { auth200Res, auth201Res } = HttpResponse;
+const { createUser, prepareResponse } = UserHelper;
 const { generate } = Token;
-const { queryOne } = database;
 
-class UserController {
-  constructor() {
-    this.addUser = this.addUser.bind(this);
-    this.sendAuthRes = this.sendAuthRes.bind(this);
-  }
-
-  async addUser({ body }, res) {
+export default class UserController {
+  static async addUser({ body }, res, next) {
     try {
-      this.newUser = await queryOne(createClient(), prepareRequest(body));
-      return auth201Res(res, prepareResponse(this.newUser), generate(this.newUser.id));
-    } catch (err) {
-      return console.error(err);
+      const newUserRes = await createUser(body);
+      auth201Res(res, newUserRes, generate(newUserRes.id));
+    } catch (error) {
+      next(error);
     }
   }
 
-  sendAuthRes(req, res) {
-    try {
-      const { retrievedFollows } = followController;
-      const { followers, followings } = retrievedFollows;
-      const { registeredUser } = singletonUserAuth;
-      registeredUser.followings = followings;
-      registeredUser.followers = followers;
-      this.authRes = auth200Res(res, prepareResponse(registeredUser), generate(registeredUser.id));
-      return this.authRes;
-    } catch (err) {
-      return console.error(err);
-    }
+  static sendAuthRes(req, res) {
+    const { locals: { registeredUser } } = res;
+    return auth200Res(res, prepareResponse(registeredUser), generate(registeredUser._id));
   }
 }
-
-export default new UserController();

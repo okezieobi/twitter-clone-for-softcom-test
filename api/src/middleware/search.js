@@ -1,17 +1,18 @@
-import { singletonUserAuth } from '../auth/users';
-import UserValidator from '../data/users';
+import UserAuth from '../auth/users';
+import UserValidator from '../guard/users';
 import MiddlewareHelper from './middleware';
-import SearchValidator from '../data/search';
-import singletonSearchAuth from '../auth/search';
+import SearchValidator from '../guard/search';
+import SearchAuth from '../auth/search';
 
 const { validateToken } = UserValidator;
-const { authenticateAll, verifyToken } = singletonUserAuth;
+const { authenticateAll, verifyToken } = UserAuth;
 const { routeCallbacks } = MiddlewareHelper;
 const { validateSearch } = SearchValidator;
-const { getSearches } = singletonSearchAuth;
+const { checkSearchResult, getUserSearch, getTweetOrReplySearch } = SearchAuth;
 
 export default class Searches {
   static createSearch() {
-    return routeCallbacks(validateSearch, validateToken, verifyToken, authenticateAll, getSearches);
+    return routeCallbacks(validateSearch, validateToken, verifyToken,
+      authenticateAll, getTweetOrReplySearch, getUserSearch, checkSearchResult);
   }
 }

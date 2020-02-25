@@ -1,12 +1,12 @@
-import TweetOrReplyValidator from '../data/tweetsOrReplies';
-import { singletonUserAuth } from '../auth/users';
-import UserValidator from '../data/users';
+import TweetOrReplyValidator from '../guard/tweetsOrReplies';
+import UserAuth from '../auth/users';
+import UserValidator from '../guard/users';
 import MiddlewareHelper from './middleware';
 import TweetOrReplyAuth from '../auth/tweetsOrReplies';
 
 const { validateTweet, validateReply, validateTweetId } = TweetOrReplyValidator;
 const { validateToken } = UserValidator;
-const { authenticateAll, verifyToken } = singletonUserAuth;
+const { authenticateAll, verifyToken } = UserAuth;
 const { routeCallbacks } = MiddlewareHelper;
 const { authTweetById } = TweetOrReplyAuth;
 

@@ -1,13 +1,12 @@
-import UserValidator from '../data/users';
-import UserAuth, { singletonUserAuth } from '../auth/users';
+import UserValidator from '../guard/users';
+import UserAuth from '../auth/users';
 import MiddlewareHelper from './middleware';
 import followController from '../controllers/follows';
 
 const { validatePassword, validateNewUser, validateRegisteredUser } = UserValidator;
-const { findUserWithEmailOrUsername } = UserAuth;
-const { getUserByUsernameOrEmail, verifyPassword } = singletonUserAuth;
+const { findUserWithEmailOrUsername, getUserByUsernameOrEmail, verifyPassword } = UserAuth;
 const { routeCallbacks } = MiddlewareHelper;
-const { getFollows } = followController;
+const { findFollows } = followController;
 
 export default class UserMiddleware {
   static signup() {
@@ -16,6 +15,6 @@ export default class UserMiddleware {
 
   static signin() {
     return routeCallbacks(validateRegisteredUser, validatePassword,
-      getUserByUsernameOrEmail, verifyPassword, getFollows);
+      getUserByUsernameOrEmail, verifyPassword, findFollows);
   }
 }

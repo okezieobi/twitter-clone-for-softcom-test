@@ -1,30 +1,65 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import { Types } from 'mongoose';
 import chai, {
   expect,
 } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../api/src';
-import pool from '../api/src/db/pgConnect';
-import seeder from '../api/src/seeders/seeder';
-import token from '../api/src/helpers/jwt';
+import userModel from '../api/src/models/users';
+import { followerModel, followingModel } from '../api/src/models/follows';
+import ExtendedErrs from '../api/src/errors/extended';
+import { tweetModel, tweetReplyModel } from '../api/src/models/tweetOrReplies';
+import {
+  userSeeds, tweetReplySeeds, tweetSeeds, followSeeds,
+} from '../mocks';
+import token from '../api/src/utils/jwt';
+
+const { consoleError } = ExtendedErrs;
+const { ObjectId } = Types;
 
 class Test {
-  constructor() {
-    this.returnRandomValue = this.returnRandomValue.bind(this);
-    this.createEmailVarChar = this.createEmailVarChar.bind(this);
+  static async deleteData() {
+    try {
+      await tweetReplyModel.deleteMany();
+      await tweetModel.deleteMany();
+      await userModel.deleteMany();
+      await followerModel.deleteMany();
+      await followingModel.deleteMany();
+    } catch (error) {
+      consoleError();
+    }
   }
 
-  static deleteData() {
-    return seeder.deleteAll;
+  static async seedUsers() {
+    try {
+      await userModel.create(userSeeds);
+    } catch (error) {
+      consoleError(error);
+    }
   }
 
-  static users() {
-    return seeder.users.insertData;
+  static async seedTweets() {
+    try {
+      await tweetModel.create(tweetSeeds);
+    } catch (error) {
+      consoleError(error);
+    }
   }
 
-  static tweetsOrReplies() {
-    return seeder.tweetsOrReplies.insertData;
+  static async seedTweetReplies() {
+    try {
+      await tweetReplyModel.create(tweetReplySeeds);
+    } catch (error) {
+      consoleError(error);
+    }
+  }
+
+  static async seedFollows() {
+    try {
+      await followerModel.create(followSeeds[1]);
+      await followingModel.create(followSeeds[0]);
+    } catch (error) {
+      consoleError(error);
+    }
   }
 
   static generateToken(id = 0) {
@@ -35,8 +70,8 @@ class Test {
     return Math.floor(Math.random() * array.length);
   }
 
-  returnRandomValue(...values) {
-    return values[this.constructor.getRandomArrayIndex(values)];
+  static returnRandomValue(...values) {
+    return values[Test.getRandomArrayIndex(values)];
   }
 
   static createVarChars(length = 0) {
@@ -49,24 +84,20 @@ class Test {
     return result;
   }
 
-  createEmailVarChar(userLength = 0, domainLength = 0) {
-    return `${this.constructor.createVarChars(userLength)}@${this.constructor.createVarChars(domainLength)}.${this.constructor.createVarChars(3)}`;
+  static createEmailVarChar(userLength = 0, domainLength = 0) {
+    return `${Test.createVarChars(userLength)}@${Test.createVarChars(domainLength)}.${Test.createVarChars(3)}`;
   }
 }
 
-require('./users/signup');
-require('./users/signin');
-require('./tweetsOrReplies/createTweet');
-require('./tweetsOrReplies/getTweetsByUserId');
-require('./tweetsOrReplies/createTweetReply');
-require('./follows/createFollow');
-require('./search/createSearch');
 
 export {
   expect,
   chai,
   chaiHttp,
   app,
-  pool,
   Test,
+  userSeeds,
+  tweetSeeds,
+  tweetReplySeeds,
+  ObjectId,
 };

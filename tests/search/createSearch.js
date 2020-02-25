@@ -1,79 +1,93 @@
+/* eslint-disable no-underscore-dangle */
 import {
   Test,
   expect,
   chai,
   chaiHttp,
   app,
-  pool,
+  userSeeds,
+  tweetReplySeeds,
+  tweetSeeds,
+  ObjectId,
 } from '../index';
 
-const { queryNone, queryAny } = pool;
 const {
-  deleteData, users, generateToken, createVarChars, tweetsOrReplies, getRandomArrayIndex,
+  deleteData, seedUsers, generateToken, createVarChars, seedFollows,
+  seedTweets, seedTweetReplies, getRandomArrayIndex, returnRandomValue,
 } = Test;
-const { returnRandomValue } = new Test();
 
 chai.use(chaiHttp);
 
 describe('Test endpoint at "/api/v1/searches" to search users, tweets and replies as authenticated User with POST', () => {
-  before('Delete data before test', async () => {
-    await queryNone(deleteData());
+  before('Delete data before tests', async () => {
+    await deleteData();
   });
 
-  before('Insert user data before tests', async () => {
-    await queryAny(users());
+  before('Seed user data before tests', async () => {
+    await seedUsers();
   });
 
-  before('Insert tweet and reply data before tests', async () => {
-    await queryAny(tweetsOrReplies());
+  before('Seed tweet data before tests', async () => {
+    await seedTweets();
+  });
+
+  before('Seed tweet reply data before tests', async () => {
+    await seedTweetReplies();
+  });
+
+  before('Seed follow data before tests', async () => {
+    await seedFollows();
   });
 
   after('Delete data after tests', async () => {
-    await queryNone(deleteData());
+    await deleteData();
   });
 
   it('Should search users, tweets and replies at "/api/v1/searches" as authenticated User with POST if all input fields are valid', async () => {
-    const testData = { search: await returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
-    const token = generateToken('1010101010101');
+    const testData = {
+      search: returnRandomValue(tweetSeeds[0].tweet,
+        userSeeds[0].username, tweetReplySeeds[0].reply),
+    };
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(200);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(200);
     expect(response.body).to.have.property('data').to.be.an('object');
-    expect(response.body.data).to.have.property('userRes').to.be.an('array');
-    const { userRes } = response.body.data;
-    const randomUserResIndex = getRandomArrayIndex(userRes);
-    if (userRes.length > 0) {
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('id').to.be.a('number');
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('fullName').to.be.a('string');
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('username').to.be.a('string');
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('email').to.be.a('string');
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('type').to.be.a('string').to.equal('Client');
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('createdOn').to.be.a('string');
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('followings').to.be.a('number');
-      expect(response.body.data.userRes[randomUserResIndex]).to.have.property('followers').to.be.a('number');
+    expect(response.body.data).to.have.property('userSearchRes').to.be.an('array');
+    const { userSearchRes } = response.body.data;
+    const randomUserResIndex = getRandomArrayIndex(userSearchRes);
+    if (userSearchRes.length > 0) {
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('id').to.be.a('string');
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('fullName').to.be.a('string');
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('username').to.be.a('string');
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('email').to.be.a('string');
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('type').to.be.a('string').to.equal('Client');
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('createdOn').to.be.a('string');
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('followings').to.be.a('number');
+      expect(response.body.data.userSearchRes[randomUserResIndex]).to.have.property('followers').to.be.a('number');
     }
-    expect(response.body.data).to.have.property('tweetRes').to.be.an('array');
-    const { tweetRes } = response.body.data;
-    const randomTweetResIndex = getRandomArrayIndex(tweetRes);
-    if (tweetRes.length > 0) {
-      expect(response.body.data.tweetRes[randomTweetResIndex]).to.have.property('id').to.be.a('number');
-      expect(response.body.data.tweetRes[randomTweetResIndex]).to.have.property('tweet').to.be.a('string');
-      expect(response.body.data.tweetRes[randomTweetResIndex]).to.have.property('createdOn').to.be.a('string');
+    expect(response.body.data).to.have.property('tweetSearchRes').to.be.an('array');
+    const { tweetSearchRes } = response.body.data;
+    const randomTweetResIndex = getRandomArrayIndex(tweetSearchRes);
+    if (tweetSearchRes.length > 0) {
+      expect(response.body.data.tweetSearchRes[randomTweetResIndex]).to.have.property('id').to.be.a('string');
+      expect(response.body.data.tweetSearchRes[randomTweetResIndex]).to.have.property('tweet').to.be.a('string');
+      expect(response.body.data.tweetSearchRes[randomTweetResIndex]).to.have.property('createdOn').to.be.a('string');
     }
-    expect(response.body.data).to.have.property('replyRes').to.be.an('array');
-    const { replyRes } = response.body.data;
-    const randomReplyResIndex = getRandomArrayIndex(replyRes);
-    if (replyRes.length > 0) {
-      expect(response.body.data.replyRes[randomReplyResIndex]).to.have.property('id').to.be.a('number');
-      expect(response.body.data.replyRes[randomReplyResIndex]).to.have.property('reply').to.be.a('string');
-      expect(response.body.data.replyRes[randomReplyResIndex]).to.have.property('createdOn').to.be.a('string');
+    expect(response.body.data).to.have.property('tweetReplySearchRes').to.be.an('array');
+    const { tweetReplySearchRes } = response.body.data;
+    const randomReplyResIndex = getRandomArrayIndex(tweetReplySearchRes);
+    if (tweetReplySearchRes.length > 0) {
+      expect(response.body.data.tweetReplySearchRes[randomReplyResIndex]).to.have.property('id').to.be.a('string');
+      expect(response.body.data.tweetReplySearchRes[randomReplyResIndex]).to.have.property('reply').to.be.a('string');
+      expect(response.body.data.tweetReplySearchRes[randomReplyResIndex]).to.have.property('createdOn').to.be.a('string');
     }
-  });
+  }).timeout(3000);
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if search input is a falsy value', async () => {
-    const testData = { search: await returnRandomValue('', undefined, null, 0, NaN) };
-    const token = generateToken('1010101010101');
+    const testData = { search: returnRandomValue('', undefined, null, 0, NaN) };
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -82,7 +96,7 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
   });
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if search input is not sent', async () => {
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/searches').set('token', token);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -92,7 +106,7 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if search input is not string data type', async () => {
     const testData = { search: 2000 };
-    const token = generateToken('1010101010101');
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -101,8 +115,8 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
   });
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if search input is more than 128 characters', async () => {
-    const testData = { search: await createVarChars(200) };
-    const token = generateToken('1010101010101');
+    const testData = { search: createVarChars(200) };
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -111,8 +125,8 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
   });
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if search input does not have ny matches', async () => {
-    const testData = { search: await createVarChars(50) };
-    const token = generateToken('1010101010101');
+    const testData = { search: createVarChars(50) };
+    const token = generateToken(userSeeds[0]._id);
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(404);
     expect(response.body).to.be.an('object');
@@ -121,7 +135,7 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
   });
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if token is an empty string', async () => {
-    const testData = { search: await returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
+    const testData = { search: returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
     const token = '';
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(400);
@@ -131,7 +145,7 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
   });
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if token is not sent', async () => {
-    const testData = { search: await returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
+    const testData = { search: returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
     const response = await chai.request(app).post('/api/v1/searches').send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
@@ -140,7 +154,7 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
   });
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if token does not match JWT format', async () => {
-    const testData = { search: await returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
+    const testData = { search: returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
     const token = createVarChars(300);
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(400);
@@ -150,8 +164,8 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
   });
 
   it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if id from token does not match any user', async () => {
-    const testData = { search: await returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
-    const token = generateToken('1010101034561');
+    const testData = { search: returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
+    const token = generateToken(new ObjectId());
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(404);
     expect(response.body).to.be.an('object');
@@ -159,13 +173,13 @@ describe('Test endpoint at "/api/v1/searches" to search users, tweets and replie
     expect(response.body).to.have.property('error').to.be.a('string').to.equal('Token provided does not match any user');
   });
 
-  it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if id from token not a positive integer', async () => {
-    const testData = { search: await returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
-    const token = generateToken(returnRandomValue('-1010101010101', '1010101.010101', '-10101010.10101'));
+  it('Should NOT search for tweets, users, replies at "/api/v1/searches" as an authenticated user if id from token does not much MongoDB ObjectId format', async () => {
+    const testData = { search: returnRandomValue('This is my first tweet', 'Obiedere', 'This is my 1st reply to a tweet') };
+    const token = generateToken(returnRandomValue(createVarChars(12), createVarChars(24)));
     const response = await chai.request(app).post('/api/v1/searches').set('token', token).send(testData);
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token must be a positive integer');
+    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Id from token does not match MongoDB ObjectId format');
   });
 });
