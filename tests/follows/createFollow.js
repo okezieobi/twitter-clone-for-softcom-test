@@ -45,7 +45,7 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username is required');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username is required');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is not sent', async () => {
@@ -55,7 +55,7 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username is required');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username is required');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is not string data type', async () => {
@@ -65,7 +65,7 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username must be string data type');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username must be string data type');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is more than 128 characters', async () => {
@@ -75,7 +75,7 @@ describe('Test endpoint at "/api/v1/follows" to follow another registered user a
     expect(response).to.have.status(400);
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
-    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Email or username must be less than 128 characters');
+    expect(response.body).to.have.property('error').to.be.an('string').to.equal('Full name or username must be less than 128 characters');
   });
 
   it('Should not follow another registered user at "/api/v1/follows" as an authenticated user with POST if user data is not found', async () => {
