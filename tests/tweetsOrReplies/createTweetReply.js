@@ -7,6 +7,7 @@ import {
   app,
   userSeeds,
   tweetSeeds,
+  tweetReplySeeds,
   ObjectId,
 } from '../index';
 
@@ -34,7 +35,7 @@ describe('Test endpoint at "/api/v1/tweets/:id/replies" to create a tweet repl/r
   });
 
   it('Should create a tweet reply at "/api/v1/tweets/:id/replies" as an authenticated user with POST if all input fields are valid', async () => {
-    const testData = { reply: 'First tweet reply' };
+    const testData = { reply: 'First Tweet reply' };
     const token = generateToken(userSeeds[0]._id);
     const tweetId = tweetSeeds[0]._id;
     const response = await chai.request(app).post(`/api/v1/tweets/${tweetId}/replies`).set('token', token).send(testData);
@@ -79,6 +80,17 @@ describe('Test endpoint at "/api/v1/tweets/:id/replies" to create a tweet repl/r
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('status').to.be.a('number').to.equal(400);
     expect(response.body).to.have.property('error').to.be.a('string').to.equal('Reply must be less than 280 characters');
+  });
+
+  it('Should not create a tweet reply at "/api/v1/tweets/:id/replies" as an authenticated user with POST if tweet is not found', async () => {
+    const testData = { reply: tweetReplySeeds[0].reply };
+    const token = generateToken(userSeeds[0]._id);
+    const tweetId = new ObjectId();
+    const response = await chai.request(app).post(`/api/v1/tweets/${tweetId}/replies`).set('token', token).send(testData);
+    expect(response).to.have.status(404);
+    expect(response.body).to.be.an('object');
+    expect(response.body).to.have.property('status').to.be.a('number').to.equal(404);
+    expect(response.body).to.have.property('error').to.be.a('string').to.equal('Tweet not found');
   });
 
   it('Should not create a tweet reply at "/api/v1/tweets/:id/replies" as an authenticated user with POST if token is an empty string', async () => {
