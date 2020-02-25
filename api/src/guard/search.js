@@ -1,10 +1,10 @@
 import IndexValidator from './index';
 
-const { checkStringTypeRequest } = IndexValidator;
+const { checkStringTypeRequest, validateVarChar } = IndexValidator;
 
 export default class SearchValidator {
   static validateSearch({ body: { search = '' } }, res, next) {
-    checkStringTypeRequest(search, 'Search', this.validateVarChar);
+    checkStringTypeRequest(search, 'Search', validateVarChar);
     next();
   }
 }
