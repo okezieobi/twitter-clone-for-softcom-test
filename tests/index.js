@@ -6,14 +6,14 @@ import chaiHttp from 'chai-http';
 import app from '../api/src';
 import userModel from '../api/src/models/users';
 import { followerModel, followingModel } from '../api/src/models/follows';
-import TemplateErrors from '../api/src/errors/templateLiterals';
+import ExtendedErrs from '../api/src/errors/extended';
 import { tweetModel, tweetReplyModel } from '../api/src/models/tweetOrReplies';
 import {
   userSeeds, tweetReplySeeds, tweetSeeds, followSeeds,
 } from '../mocks';
 import token from '../api/src/utils/jwt';
 
-const { consoleError } = TemplateErrors;
+const { consoleError } = ExtendedErrs;
 const { ObjectId } = Types;
 
 class Test {

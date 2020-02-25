@@ -30,41 +30,22 @@ export default class TweetOrReplyHelper {
   }
 
   static async createTweet(tweet = '', userId = '') {
-    try {
-      const newTweet = await tweetModel.create({ tweet, userId });
-      const newTweetRes = TweetOrReplyHelper.prepareTweetResponse(newTweet);
-      return { newTweetRes };
-    } catch (error) {
-      return error;
-    }
+    const newTweet = await tweetModel.create({ tweet, userId });
+    return TweetOrReplyHelper.prepareTweetResponse(newTweet);
   }
 
   static async getTweetsByUserId(userId = '') {
-    try {
-      const userTweets = await tweetModel.find({ userId });
-      const userTweetsRes = TweetOrReplyHelper.prepareTweetResArray(userTweets);
-      return { userTweetsRes };
-    } catch (error) {
-      return error;
-    }
+    const userTweets = await tweetModel.find({ userId });
+    return TweetOrReplyHelper.prepareTweetResArray(userTweets);
   }
 
   static async findTweetById(_id = '') {
-    try {
-      const getTweet = await tweetModel.findById({ _id });
-      return { getTweet };
-    } catch (error) {
-      return error;
-    }
+    const getTweet = await tweetModel.findById({ _id });
+    return getTweet;
   }
 
   static async createTweetReply(reply = '', tweetId = '', userId = '') {
-    try {
-      const newTweetReply = await tweetReplyModel.create({ reply, tweetId, userId });
-      const newTweetReplyRes = TweetOrReplyHelper.prepareTweetReplyResponse(newTweetReply);
-      return { newTweetReplyRes };
-    } catch (error) {
-      return error;
-    }
+    const newTweetReply = await tweetReplyModel.create({ reply, tweetId, userId });
+    return TweetOrReplyHelper.prepareTweetReplyResponse(newTweetReply);
   }
 }

@@ -1,4 +1,4 @@
-import UserValidator from '../rules/users';
+import UserValidator from '../guard/users';
 import UserAuth from '../auth/users';
 import MiddlewareHelper from './middleware';
 import followController from '../controllers/follows';

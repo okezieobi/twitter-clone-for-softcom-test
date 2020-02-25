@@ -1,6 +1,6 @@
-import TweetOrReplyValidator from '../rules/tweetsOrReplies';
+import TweetOrReplyValidator from '../guard/tweetsOrReplies';
 import UserAuth from '../auth/users';
-import UserValidator from '../rules/users';
+import UserValidator from '../guard/users';
 import MiddlewareHelper from './middleware';
 import TweetOrReplyAuth from '../auth/tweetsOrReplies';
 

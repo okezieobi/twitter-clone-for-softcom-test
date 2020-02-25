@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 export default class Middleware {
   static callBack(method) {
     return (...args) => method(...args);

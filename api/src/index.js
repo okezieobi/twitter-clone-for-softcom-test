@@ -2,9 +2,9 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import app from './app';
-import TemplateErrors from './errors/templateLiterals';
+import ErrMessages from './errors/extended';
 
-const { consoleError, consoleWarn } = TemplateErrors;
+const { consoleError, consoleWarn } = ErrMessages;
 
 dotenv.config();
 

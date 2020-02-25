@@ -1,39 +1,39 @@
-import HttpResponse from '../utils/response';
 import SearchHelper from '../helpers/search';
-import TemplateErrors from '../errors/templateLiterals';
+import ExtendedErrs from '../errors/extended';
 
-const { err404Res } = HttpResponse;
 const { searchUsers, searchTweetsOrReplies } = SearchHelper;
-const { noSearchResults, consoleError } = TemplateErrors;
+const { noSearchResults } = ExtendedErrs;
 
 export default class SearchAuth {
   static async getUserSearch({ body: { search = '' } }, res, next) {
-    const { userSearchRes, name, message } = await searchUsers(search);
-    if (name || message) consoleError({ name, message });
-    else {
-      res.locals.userSearchRes = userSearchRes;
+    try {
+      res.locals.userSearchRes = await searchUsers(search);
       next();
+    } catch (error) {
+      next(error);
     }
   }
 
   static async getTweetOrReplySearch({ body: { search = '' } }, res, next) {
-    const {
-      tweetSearchRes, tweetReplySearchRes, name, message,
-    } = await searchTweetsOrReplies(search);
-    if (name || message) consoleError({ name, message });
-    else {
+    try {
+      const { tweetSearchRes, tweetReplySearchRes } = await searchTweetsOrReplies(search);
       res.locals.tweetSearchRes = tweetSearchRes;
       res.locals.tweetReplySearchRes = tweetReplySearchRes;
       next();
+    } catch (error) {
+      next(error);
     }
   }
 
-  static async checkSearchResult({ body: { search = '' } }, res, next) {
-    const { locals: { userSearchRes, tweetSearchRes, tweetReplySearchRes } } = res;
-    if (userSearchRes.length > 0 || tweetSearchRes.length > 0 || tweetReplySearchRes.length > 0) {
-      next();
-    } else {
-      err404Res(res, noSearchResults(search));
+  static checkSearchResult({ body: { search = '' } }, { locals: { userSearchRes, tweetSearchRes, tweetReplySearchRes } }, next) {
+    try {
+      if (userSearchRes.length > 0 || tweetSearchRes.length > 0 || tweetReplySearchRes.length > 0) {
+        next();
+      } else {
+        throw new ExtendedErrs(404, noSearchResults(search));
+      }
+    } catch (error) {
+      next(error);
     }
   }
 }

@@ -14,43 +14,34 @@ export default class SearchHelper {
   }
 
   static async searchUsers(search = '') {
-    try {
-      const searchPattern = SearchHelper.prepareRequest(search);
-      const userSearch = await userModel.find({
-        $or: [{ username: { $regex: searchPattern } },
-          { fullName: { $regex: searchPattern } }],
+    const searchPattern = SearchHelper.prepareRequest(search);
+    const userSearch = await userModel.find({
+      $or: [{ username: { $regex: searchPattern } },
+        { fullName: { $regex: searchPattern } }],
+    });
+    if (userSearch.length > 0) {
+      userSearch.forEach(async (user) => {
+        const { _id } = user;
+        const followings = await followingModel.find({ userId: _id });
+        const followers = await followerModel.find({ userId: _id });
+        const eachUser = user;
+        eachUser.followings = followings;
+        eachUser.followers = followers;
       });
-      if (userSearch.length > 0) {
-        userSearch.forEach(async (user) => {
-          const { _id } = user;
-          const followings = await followingModel.find({ userId: _id });
-          const followers = await followerModel.find({ userId: _id });
-          const eachUser = user;
-          eachUser.followings = followings;
-          eachUser.followers = followers;
-        });
-      }
-      const userSearchRes = userSearch.map((user) => prepareUserRes(user));
-      return { userSearchRes };
-    } catch (error) {
-      return error;
     }
+    return userSearch.map((user) => prepareUserRes(user));
   }
 
   static async searchTweetsOrReplies(search = '') {
-    try {
-      const searchPattern = SearchHelper.prepareRequest(search);
-      const tweetSearch = await tweetModel.find({ tweet: { $regex: searchPattern } });
-      const tweetReplySearch = await tweetReplyModel.find(
-        { reply: { $regex: searchPattern } },
-      );
-      const tweetSearchRes = tweetSearch.map((tweet) => prepareTweetResponse(tweet));
-      const tweetReplySearchRes = tweetReplySearch.map(
-        (tweetReply) => prepareTweetReplyResponse(tweetReply),
-      );
-      return { tweetSearchRes, tweetReplySearchRes };
-    } catch (error) {
-      return error;
-    }
+    const searchPattern = SearchHelper.prepareRequest(search);
+    const tweetSearch = await tweetModel.find({ tweet: { $regex: searchPattern } });
+    const tweetReplySearch = await tweetReplyModel.find(
+      { reply: { $regex: searchPattern } },
+    );
+    const tweetSearchRes = tweetSearch.map((tweet) => prepareTweetResponse(tweet));
+    const tweetReplySearchRes = tweetReplySearch.map(
+      (tweetReply) => prepareTweetReplyResponse(tweetReply),
+    );
+    return { tweetSearchRes, tweetReplySearchRes };
   }
 }

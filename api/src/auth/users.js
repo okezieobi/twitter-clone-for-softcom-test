@@ -1,65 +1,76 @@
-import HttpResponse from '../utils/response';
-import LiteralErrors from '../errors/stringLiterals';
-import TemplateErrors from '../errors/templateLiterals';
+import ExtendedErrs from '../errors/extended';
 import UserHelper from '../helpers/users';
 import Jwt from '../utils/jwt';
 import Bcrypt from '../utils/bcrypt';
 import Validator from '../utils/validator';
 
-const { err400Res, err404Res } = HttpResponse;
 const { compare } = Bcrypt;
 const {
   userExists, userNotExists, wrongPassword, wrongToken,
-} = LiteralErrors;
+} = new ExtendedErrs();
 const { verify } = Jwt;
 const { checkObjectId } = Validator;
-const { consoleError, notObjectId } = TemplateErrors;
+const { notObjectId } = ExtendedErrs;
 const { findUserByEmailAndUsername, findUserById, getUserByUsernameOrEmail } = UserHelper;
 
 export default class UserAuth {
   static async findUserWithEmailOrUsername({ body: { username = '', email = '' } }, res, next) {
-    const { newUser, name, message } = await findUserByEmailAndUsername(username, email);
-    if (name || message) return consoleError({ name, message });
-    const signupNext = newUser ? err400Res(res, userExists()) : next();
-    return signupNext;
+    try {
+      const newUser = await findUserByEmailAndUsername(username, email);
+      if (newUser) throw new ExtendedErrs(400, userExists);
+      next();
+    } catch (error) {
+      next(error);
+    }
   }
 
   static async getUserByUsernameOrEmail({ body: { user = '' } }, res, next) {
-    const { registeredUser, name, message } = await getUserByUsernameOrEmail(user);
-    if (name || message) return consoleError({ name, message });
-    if (registeredUser) {
-      res.locals.registeredUser = registeredUser;
-      return next();
+    try {
+      const registeredUser = await getUserByUsernameOrEmail(user);
+      if (registeredUser) {
+        res.locals.registeredUser = registeredUser;
+        next();
+      } else {
+        throw new ExtendedErrs(404, userNotExists);
+      }
+    } catch (error) {
+      next(error);
     }
-    return err404Res(res, userNotExists());
   }
 
-  static verifyPassword({ body: { password = '' } }, res, next) {
-    const { locals: { registeredUser: { hashedPassword } } } = res;
-    const verifyPassword = compare(hashedPassword, password);
-    const resErr = verifyPassword ? next() : err400Res(res, wrongPassword());
-    return resErr;
+  static verifyPassword({ body: { password = '' } }, { locals: { registeredUser: { hashedPassword } } }, next) {
+    try {
+      const verifyPassword = compare(hashedPassword, password);
+      if (verifyPassword) next();
+      else throw new ExtendedErrs(400, wrongPassword);
+    } catch (error) {
+      next(error);
+    }
   }
 
   static verifyToken({ headers: { token = '' } }, res, next) {
-    const { userId, message, name } = verify(token);
-    if (name || message) return consoleError({ name, message }); // jwt err
+    const { userId } = verify(token);
     const checkId = checkObjectId(userId);
     if (checkId) {
       res.locals.userId = userId;
-      return next();
+      next();
+    } else {
+      throw new ExtendedErrs(400, notObjectId('Id from token'));
     }
-    return err400Res(res, notObjectId('Id from token'));
   }
 
   static async authenticateAll(req, res, next) {
-    const { locals: { userId } } = res;
-    const { authUser, name, message } = await findUserById(userId);
-    if (name || message) return consoleError({ name, message });
-    if (authUser) {
-      res.locals.authUser = authUser;
-      return next();
+    try {
+      const { locals: { userId } } = res;
+      const authUser = await findUserById(userId);
+      if (authUser) {
+        res.locals.authUser = authUser;
+        next();
+      } else {
+        throw new ExtendedErrs(404, wrongToken);
+      }
+    } catch (error) {
+      next(error);
     }
-    return err404Res(res, wrongToken());
   }
 }

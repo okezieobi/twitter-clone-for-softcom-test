@@ -30,43 +30,26 @@ export default class UserHelper {
   }
 
   static async findUserByEmailAndUsername(username = '', email = '') {
-    try {
-      const newUser = await userModel.findOne({ $or: [{ username }, { email }] });
-      return { newUser };
-    } catch (error) {
-      return error;
-    }
+    const newUser = await userModel.findOne({ $or: [{ username }, { email }] });
+    return newUser;
   }
 
   static async getUserByUsernameOrEmail(user = '') {
-    try {
-      const registeredUser = await userModel.findOne({
-        $or: [{ username: user },
-          { email: user }],
-      });
-      return { registeredUser };
-    } catch (error) {
-      return error;
-    }
+    const registeredUser = await userModel.findOne({
+      $or: [{ username: user },
+        { email: user }],
+    });
+    return registeredUser;
   }
 
   static async findUserById(_id = '') {
-    try {
-      const authUser = await userModel.findById({ _id });
-      return { authUser };
-    } catch (error) {
-      return error;
-    }
+    const authUser = await userModel.findById({ _id });
+    return authUser;
   }
 
   static async createUser(userReqData = {}) {
-    try {
-      const userData = UserHelper.prepareRequest(userReqData);
-      const addedUser = await userModel.create(userData);
-      const newUserRes = UserHelper.prepareResponse(addedUser);
-      return { newUserRes };
-    } catch (error) {
-      return error;
-    }
+    const userData = UserHelper.prepareRequest(userReqData);
+    const addedUser = await userModel.create(userData);
+    return UserHelper.prepareResponse(addedUser);
   }
 }

@@ -18,20 +18,6 @@ export default class HttpResponse {
     res.status(codeStatus).set('token', authResponse.token).send(authResponse);
   }
 
-  static err400Res(res, err400Message) {
-    return HttpResponse.response(res, 400, 'error', err400Message);
-  }
-
-  static err404Res(res, err404Message) {
-    return HttpResponse.response(res, 404, 'error', err404Message);
-  }
-
-  /*
-  static err403Res(res, err403Message) {
-    return HttpResponse.response(res, 403, 'error', err403Message);
-  }
-  */
-
   static success200Res(res, success200Data) {
     return HttpResponse.response(res, 200, 'data', success200Data);
   }
